@@ -81,8 +81,9 @@ public class ChangePassword extends Application {
     }
     @Override
     public void start(final Stage primaryStage) throws IOException {
+        Extras.cur=1;
 
-        InputStream serviceAccount = new FileInputStream("key.json");
+        InputStream serviceAccount = new FileInputStream(Extras.path);
         GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(credentials)
@@ -132,12 +133,6 @@ public class ChangePassword extends Application {
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
         hbBtn.getChildren().add(btn);
         grid.add(hbBtn, 1, Extras.y+4);
-
-        Button btn_back = new Button("Back");
-        HBox hb_back = new HBox(10);
-        hb_back.setAlignment(Pos.BOTTOM_RIGHT);
-        hb_back.getChildren().add(btn_back);
-        grid.add(hb_back, 1, Extras.y+5);
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -221,7 +216,7 @@ public class ChangePassword extends Application {
                             //System.out.println(opa[0]);
                             String[] npa= new String[1];
                             npa[0]=MD5.getMd5(np.getText().trim());
-                            // System.out.println(npa.toString());
+                           // System.out.println(npa.toString());
                             Date dNow = new Date( );
                             SimpleDateFormat ft =
                                     new SimpleDateFormat ("yyyy.MM.dd hh:mm:ss");
@@ -254,21 +249,6 @@ public class ChangePassword extends Application {
 
             }
         });
-
-
-        btn_back.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent e) {
-                try {
-                    new Home().start(new Stage());
-                } catch (Exception scriptException) {
-                    scriptException.printStackTrace();
-                }
-                primaryStage.close();
-            }
-        });
-
         primaryStage.show();
 
     }

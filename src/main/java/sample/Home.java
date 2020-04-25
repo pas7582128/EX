@@ -53,7 +53,8 @@ public class Home extends Application {
 
     @Override
     public void start(final Stage primaryStage) throws ScriptException, IOException{
-        InputStream serviceAccount = new FileInputStream("key.json");
+        Extras.cur=1;
+        InputStream serviceAccount = new FileInputStream(Extras.path);
 
         //debug
         System.out.println("\nSA: " + serviceAccount);
@@ -134,6 +135,19 @@ public class Home extends Application {
         hb_view_sent.getChildren().add(btn_view_sent);
         grid.add(hb_view_sent,8,4,4,2);
 
+        btn_view_sent.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent e) {
+                try {
+                    new Sender().start(new Stage());
+                } catch (Exception scriptException) {
+                    scriptException.printStackTrace();
+                }
+                primaryStage.close();
+            }
+        });
+
         Button btn_received = new Button("Received msg");
         HBox hb_received = new HBox(10);
         hb_received.setAlignment(Pos.CENTER);
@@ -178,6 +192,19 @@ public class Home extends Application {
             public void handle(ActionEvent e) {
                 try {
                     new ChangePassword().start(new Stage());
+                } catch (Exception scriptException) {
+                    scriptException.printStackTrace();
+                }
+                primaryStage.close();
+            }
+        });
+
+        btn_received.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent e) {
+                try {
+                    new Receiver().start(new Stage());
                 } catch (Exception scriptException) {
                     scriptException.printStackTrace();
                 }

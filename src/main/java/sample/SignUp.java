@@ -79,6 +79,7 @@ public class SignUp extends Application {
     }
     @Override
     public void start(final Stage primaryStage) throws IOException {
+        Extras.cur=1;
 
         /*FileInputStream serviceAccount =
                 new FileInputStream("/home/amogh_agrawal/Downloads/key.json");
@@ -89,7 +90,7 @@ public class SignUp extends Application {
                 .build();
 
         FirebaseApp.initializeApp(options);*/
-        InputStream serviceAccount = new FileInputStream("key.json");
+        InputStream serviceAccount = new FileInputStream(Extras.path);
         GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(credentials)
@@ -112,18 +113,18 @@ public class SignUp extends Application {
         //engine.eval("require(\"firebase/auth\");");
         //engine.eval("require(\"firebase/firestore\");");
         //engine.eval("<body>\n" +
-        //      "  <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->\n" +
-        //    "\n" +
-        //   "  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->\n" +
-        // "  <script src=\"/__/firebase/7.14.1/firebase-app.js\"></script>\n" +
-        //"\n" +
-        //"  <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->\n" +
-        //"  <script src=\"/__/firebase/7.14.1/firebase-analytics.js\"></script>\n" +
-        //"\n" +
-        //"  <!-- Add Firebase products that you want to use -->\n" +
-        //"  <script src=\"/__/firebase/7.14.1/firebase-auth.js\"></script>\n" +
-        //"  <script src=\"/__/firebase/7.14.1/firebase-firestore.js\"></script>\n" +
-        //"</body>");
+          //      "  <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->\n" +
+            //    "\n" +
+             //   "  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->\n" +
+               // "  <script src=\"/__/firebase/7.14.1/firebase-app.js\"></script>\n" +
+                //"\n" +
+                //"  <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->\n" +
+                //"  <script src=\"/__/firebase/7.14.1/firebase-analytics.js\"></script>\n" +
+                //"\n" +
+                //"  <!-- Add Firebase products that you want to use -->\n" +
+                //"  <script src=\"/__/firebase/7.14.1/firebase-auth.js\"></script>\n" +
+                //"  <script src=\"/__/firebase/7.14.1/firebase-firestore.js\"></script>\n" +
+                //"</body>");
         primaryStage.setTitle("Secure Message Transfer");
         final GridPane grid = new GridPane();
         //grid.setAlignment(Pos.TOP_CENTER);
@@ -228,8 +229,6 @@ public class SignUp extends Application {
 
 // Add a new document (asynchronously) in collection "cities" with id "LA"
                     ApiFuture<WriteResult> future1 = db.collection("login_credentials").document(userTextField.getText().trim()).set(docData);
-
-
 // ...
 // future.get() blocks on response
                     try {
@@ -241,8 +240,9 @@ public class SignUp extends Application {
                     }
 
                     try {
-                        Extras.email="";
-                        new Main().start(new Stage());
+
+                        Extras.email=userTextField.getText().trim();
+                        new Home().start(new Stage());
                     } catch (Exception scriptException) {
                         scriptException.printStackTrace();
                     }
@@ -254,6 +254,24 @@ public class SignUp extends Application {
             }
         });
 
+        btn1.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent e) {
+                Platform.runLater(new Runnable() {
+                    public void run() {
+                        try {
+                            new Main().start(new Stage());
+                        } catch (FileNotFoundException fileNotFoundException) {
+                            fileNotFoundException.printStackTrace();
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                        }
+                        primaryStage.close();
+                    }
+                });
+            }
+        });
         primaryStage.show();
 
     }

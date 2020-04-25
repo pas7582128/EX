@@ -64,7 +64,8 @@ public class Main extends Application {
 
     @Override
     public void start(final Stage primaryStage) throws IOException {
-        InputStream serviceAccount = new FileInputStream("key.json");
+        Extras.cur=1;
+        InputStream serviceAccount = new FileInputStream(Extras.path);
         GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(credentials)
@@ -164,7 +165,6 @@ public class Main extends Application {
                     {
                         showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
                                 "Error!", "Successful login");
-
                         try {
                             Extras.email=userTextField.getText().trim();
                             new Home().start(new Stage());
@@ -172,7 +172,6 @@ public class Main extends Application {
                             scriptException.printStackTrace();
                         }
                         primaryStage.close();
-
                     }
                     else
                     {
