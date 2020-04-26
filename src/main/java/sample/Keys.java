@@ -36,16 +36,14 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
+import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import javax.script.ScriptException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.HashMap;
@@ -148,10 +146,26 @@ public class Keys extends Application {
         //System.out.println(keyPairGenerator1.getPublicKey());
         //System.out.println(Base64.getEncoder().encodeToString(keyPairGenerator.getPublicKey().getEncoded()));
         //System.out.println(Base64.getEncoder().encodeToString(keyPairGenerator.getPrivateKey().getEncoded()));
-        String k1=keyPairGenerator.getPublicKey().toString();
-        String k2=keyPairGenerator.getPrivateKey().toString();
-        String k3=keyPairGenerator1.getPublicKey().toString();
-        String k4=keyPairGenerator1.getPrivateKey().toString();
+        String k1=Base64.getEncoder().encodeToString(keyPairGenerator.getPublicKey().getEncoded());
+        String k2=Base64.getEncoder().encodeToString(keyPairGenerator.getPrivateKey().getEncoded());
+        String k3=Base64.getEncoder().encodeToString(keyPairGenerator1.getPublicKey().getEncoded());
+        String k4=Base64.getEncoder().encodeToString(keyPairGenerator1.getPrivateKey().getEncoded());
+        /*try {
+            String encryptedString = Base64.getEncoder().encodeToString(RSA_key.encrypt("Dhiraj is the author", k1));
+            System.out.println(encryptedString);
+            String decryptedString = RSA_key.decrypt(encryptedString, k2);
+            System.out.println(decryptedString);
+        } catch (NoSuchAlgorithmException e) {
+            System.err.println(e.getMessage());
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        }*/
         final Text actiontarget = new Text();
         grid.add(actiontarget, 1, 6);
         btn.setOnAction(new EventHandler<ActionEvent>() {
