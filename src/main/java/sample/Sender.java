@@ -228,52 +228,25 @@ public class Sender extends Application {
                     hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
                     hbBtn.getChildren().add(p[j]);
                     grid.add(hbBtn, 4, Extras.y+3+j);
-                    int finalJ = j;
-
-                    int finalI = i;
-                    DocumentSnapshot finalDocument = document;
-                    int finalI1 = i;
-                    /*p[j].setOnAction(new EventHandler<ActionEvent>() {
+                    int finalI2 = i;
+                    p[j].setOnAction(new EventHandler<ActionEvent>() {
 
                         @Override
                         public void handle(ActionEvent e) {
-                            if(document1[finalJ].get("algorithm").toString().equals("01"))
-                            {
-                                TextInputDialog td = new TextInputDialog("Enter Key");
-                                td.setHeaderText("Enter secret key");
-                                PasswordField pwd = new PasswordField();
-                                HBox content = new HBox();
-                                content.setAlignment(Pos.CENTER_LEFT);
-                                content.setSpacing(10);
-                                content.getChildren().addAll(new Label("Password"), pwd);
-                                td.getDialogPane().setContent(content);
-                                td.showAndWait();
 
-                                if(pwd.getText().trim().length()==0)
-                                {
-                                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                            "Error!", "Enter key");
-                                }
-                                else if(finalDocument.get(arr[co- finalI -1]+"-key").toString().equals(MD5.getMd5(pwd.getText().trim())))
-                                {
-                                    Extras.curm=co- finalI1 -1;
-                                    Extras.user_key=pwd.getText().trim();
+                                    Extras.curm=co- finalI2 -1;
+
                                     try {
-                                        new ReceiveMessage().start(new Stage());
+                                        new SendMessage().start(new Stage());
                                     } catch (Exception scriptException) {
                                         scriptException.printStackTrace();
                                     }
                                     primaryStage.close();
-                                }
-                                else
-                                {
-                                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                            "Error!", "Invalid secret key");
-                                    return;
-                                }
-                            }
+
+
+
                         }
-                    });*/
+                    });
                 }
                 j++;
             }
