@@ -56,6 +56,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import javax.crypto.spec.SecretKeySpec;
+import javax.script.ScriptException;
 import javax.swing.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -605,6 +606,34 @@ public class Email extends Application {
                 });
             }
         });
+
+        Button btn6= new Button("Home");
+        HBox hbBtn6 = new HBox(10);
+        hbBtn6.setAlignment(Pos.BOTTOM_RIGHT);
+        hbBtn.getChildren().add(btn6);
+        grid.add(hbBtn6, 2, Extras.y+9);
+
+        btn6.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent e) {
+                Platform.runLater(new Runnable() {
+                    public void run() {
+                        try {
+                            new Home().start(new Stage());
+                        } catch (FileNotFoundException fileNotFoundException) {
+                            fileNotFoundException.printStackTrace();
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                        } catch (ScriptException scriptException) {
+                            scriptException.printStackTrace();
+                        }
+                        primaryStage.close();
+                    }
+                });
+            }
+        });
+
         /*Button btn1 = new Button("Go to Login page");
         HBox hbBtn1 = new HBox(10);
         hbBtn1.setAlignment(Pos.BOTTOM_RIGHT);

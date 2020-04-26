@@ -52,6 +52,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import javax.script.ScriptException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -132,6 +133,33 @@ public class Sender extends Application {
         Text scenetitle = new Text("Sent Messages");
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(scenetitle, 2, Extras.y+1);
+
+        Button btn6= new Button("Home");
+        HBox hbBtn6 = new HBox(10);
+        hbBtn6.setAlignment(Pos.BOTTOM_RIGHT);
+        hbBtn6.getChildren().add(btn6);
+        grid.add(hbBtn6, 4, Extras.y+1);
+
+        btn6.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent e) {
+                Platform.runLater(new Runnable() {
+                    public void run() {
+                        try {
+                            new Home().start(new Stage());
+                        } catch (FileNotFoundException fileNotFoundException) {
+                            fileNotFoundException.printStackTrace();
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                        } catch (ScriptException scriptException) {
+                            scriptException.printStackTrace();
+                        }
+                        primaryStage.close();
+                    }
+                });
+            }
+        });
 
         DocumentReference docRef = db.collection("send").document(Extras.email);
         ApiFuture<DocumentSnapshot> future = docRef.get();
