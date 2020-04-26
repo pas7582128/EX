@@ -7,6 +7,6 @@ public class Extras
     public static String AES_KEY="nss1230000000000";
     public static int cur=1;
     public static int curm;
-    public static String path="../key.json";
+    public static String path="key.json";
     public static String user_key;
 }
