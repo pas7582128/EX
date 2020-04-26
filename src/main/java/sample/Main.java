@@ -167,7 +167,25 @@ public class Main extends Application {
                                 "Error!", "Successful login");
                         try {
                             Extras.email=userTextField.getText().trim();
-                            new Home().start(new Stage());
+                            DocumentReference docRef1 = db.collection("sign").document(Extras.email);
+                            ApiFuture<DocumentSnapshot> future1 = docRef1.get();
+                            DocumentSnapshot document1 = null;
+                            try {
+                                document1 = future1.get();
+                            } catch (InterruptedException interruptedException) {
+                                interruptedException.printStackTrace();
+                            } catch (ExecutionException executionException) {
+                                executionException.printStackTrace();
+                            }
+                            if (document1.exists()) {
+                                new Home().start(new Stage());
+
+                            }
+                            else
+                            {
+                                new Keys().start(new Stage());
+                            }
+
                         } catch (Exception scriptException) {
                             scriptException.printStackTrace();
                         }
