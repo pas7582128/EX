@@ -8,6 +8,7 @@ import com.google.firebase.FirebaseOptions;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.Firestore;
 
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -61,10 +62,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -131,38 +128,58 @@ public class ReceiveMessage extends Application {
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(scenetitle, 3, Extras.y+1);
 
+        Label s=new Label("Sender");
+        grid.add(s,0,Extras.y+2);
+
+        TextField sf = new TextField();
+        sf.setEditable(false);
+        grid.add(sf,1,Extras.y+2,6,1);
+
         Label Name3 = new Label("Recipient List");
-        grid.add(Name3, 0, Extras.y+2);
+        grid.add(Name3, 0, Extras.y+3);
 
         final TextArea nameField = new TextArea();
         nameField.setPrefRowCount(5);
-        grid.add(nameField, 1, Extras.y+2,6,1);
+        grid.add(nameField, 1, Extras.y+3,6,1);
         nameField.setEditable(false);
         nameField.setPrefHeight(500);
 
         Label ti=new Label("Date Time");
-        grid.add(ti,0,Extras.y+3);
+        grid.add(ti,0,Extras.y+4);
 
         TextField tif = new TextField();
         tif.setEditable(false);
-        grid.add(tif,1,Extras.y+3,6,1);
+        grid.add(tif,1,Extras.y+4,6,1);
+
+        Label p=new Label("Protection Method");
+        grid.add(p,0,Extras.y+5);
+
+        TextField pf = new TextField();
+        pf.setEditable(false);
+        grid.add(pf,1,Extras.y+5,6,1);
 
         final Label userName = new Label("Subject");
-        grid.add(userName, 0, Extras.y+4);
+        grid.add(userName, 0, Extras.y+6);
         final TextArea userTextField = new TextArea();
-        grid.add(userTextField, 1, Extras.y+4,6,1);
+        grid.add(userTextField, 1, Extras.y+6,6,1);
         userTextField.setPrefRowCount(2);
         userTextField.setPrefHeight(300);
         userTextField.setEditable(false);
 
         final Label body = new Label("Body");
-        grid.add(body, 0, Extras.y+5);
+        grid.add(body, 0, Extras.y+7);
 
         final TextArea bodyField = new TextArea();
-        grid.add(bodyField, 1, Extras.y+5,6,1);
+        grid.add(bodyField, 1, Extras.y+7,6,1);
         //bodyField.setPrefRowCount(10);
         bodyField.setPrefHeight(500);
         bodyField.setEditable(false);
+
+        Button btn = new Button("Save to File");
+        HBox hbBtn = new HBox(10);
+        hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
+        hbBtn.getChildren().add(btn);
+        grid.add(hbBtn, 1, Extras.y+8);
 
         DocumentReference docRef = db.collection("receive").document(Extras.email);
         ApiFuture<DocumentSnapshot> future = docRef.get();
@@ -234,6 +251,78 @@ public class ReceiveMessage extends Application {
                     }
                     bodyField.setText(a);
                 }
+                sf.setText(document1.get("sender").toString());
+                if(document1.get("algorithm").toString().equals("01")) {
+                    pf.setText("Not Signed  Secret Key");
+
+                }
+                else if(document1.get("algorithm").toString().equals("00"))
+                {
+                    pf.setText("Not Signed  No Secret Key");
+                }
+                else if(document1.get("algorithm").toString().equals("10"))
+                {
+                    pf.setText("Signed  No Secret Key");
+                }
+                else
+                {
+                    pf.setText("Signed  Secret Key");
+                }
+                btn.setOnAction(new EventHandler<ActionEvent>() {
+
+                    @Override
+                    public void handle(ActionEvent e) {
+                        String name;
+                        showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                "Alert!", "Files will be created in current directory");
+                        while(true)
+                        {
+                            TextInputDialog td = new TextInputDialog("Enter file name");
+                            td.setHeaderText("Enter file name without extension");
+                            td.showAndWait();
+                            name=td.getEditor().getText().trim();
+                            if(name.equals(""))
+                            {
+                                showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                        "Error!", "Enter File name");
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        try {
+
+                            File myObj = new File(name+".txt");
+                            if (myObj.createNewFile()) {
+                                //System.out.println("File created: " + myObj.getName());
+                            } else {
+                                //System.out.println("File already exists.");
+                            }
+                        } catch (IOException ef) {
+                            System.out.println("An error occurred.");
+                            ef.printStackTrace();
+                        }
+                        try {
+                            FileWriter myWriter = new FileWriter(name+".txt");
+                            String write="";
+                            write+="Sender - "+sf.getText()+"\n\n";
+                            write+="Recipients - "+nameField.getText()+"\n\n";
+                            write+="DateTime - "+tif.getText()+"\n\n";
+                            write+="Subject - "+userTextField.getText()+"\n\n";
+                            write+="Body - "+bodyField.getText()+"\n\n";
+                            myWriter.write(write);
+                            myWriter.close();
+
+                            showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                    "Success!", "Successfully written to file "+name+".txt");
+                        } catch (IOException ef) {
+                            System.out.println("An error occurred.");
+                            ef.printStackTrace();
+                        }
+
+                    }
+                });
             }
 
         }

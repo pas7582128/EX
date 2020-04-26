@@ -242,7 +242,7 @@ public class SignUp extends Application {
                     try {
 
                         Extras.email=userTextField.getText().trim();
-                        new Home().start(new Stage());
+                        new Keys().start(new Stage());
                     } catch (Exception scriptException) {
                         scriptException.printStackTrace();
                     }
