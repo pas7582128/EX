@@ -52,6 +52,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import javax.script.ScriptException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -132,6 +133,33 @@ public class Sender extends Application {
         Text scenetitle = new Text("Sent Messages");
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(scenetitle, 2, Extras.y+1);
+
+        Button btn6= new Button("Home");
+        HBox hbBtn6 = new HBox(10);
+        hbBtn6.setAlignment(Pos.BOTTOM_RIGHT);
+        hbBtn6.getChildren().add(btn6);
+        grid.add(hbBtn6, 4, Extras.y+1);
+
+        btn6.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent e) {
+                Platform.runLater(new Runnable() {
+                    public void run() {
+                        try {
+                            new Home().start(new Stage());
+                        } catch (FileNotFoundException fileNotFoundException) {
+                            fileNotFoundException.printStackTrace();
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                        } catch (ScriptException scriptException) {
+                            scriptException.printStackTrace();
+                        }
+                        primaryStage.close();
+                    }
+                });
+            }
+        });
 
         DocumentReference docRef = db.collection("send").document(Extras.email);
         ApiFuture<DocumentSnapshot> future = docRef.get();
@@ -228,52 +256,25 @@ public class Sender extends Application {
                     hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
                     hbBtn.getChildren().add(p[j]);
                     grid.add(hbBtn, 4, Extras.y+3+j);
-                    int finalJ = j;
-
-                    int finalI = i;
-                    DocumentSnapshot finalDocument = document;
-                    int finalI1 = i;
-                    /*p[j].setOnAction(new EventHandler<ActionEvent>() {
+                    int finalI2 = i;
+                    p[j].setOnAction(new EventHandler<ActionEvent>() {
 
                         @Override
                         public void handle(ActionEvent e) {
-                            if(document1[finalJ].get("algorithm").toString().equals("01"))
-                            {
-                                TextInputDialog td = new TextInputDialog("Enter Key");
-                                td.setHeaderText("Enter secret key");
-                                PasswordField pwd = new PasswordField();
-                                HBox content = new HBox();
-                                content.setAlignment(Pos.CENTER_LEFT);
-                                content.setSpacing(10);
-                                content.getChildren().addAll(new Label("Password"), pwd);
-                                td.getDialogPane().setContent(content);
-                                td.showAndWait();
 
-                                if(pwd.getText().trim().length()==0)
-                                {
-                                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                            "Error!", "Enter key");
-                                }
-                                else if(finalDocument.get(arr[co- finalI -1]+"-key").toString().equals(MD5.getMd5(pwd.getText().trim())))
-                                {
-                                    Extras.curm=co- finalI1 -1;
-                                    Extras.user_key=pwd.getText().trim();
+                                    Extras.curm=co- finalI2 -1;
+
                                     try {
-                                        new ReceiveMessage().start(new Stage());
+                                        new SendMessage().start(new Stage());
                                     } catch (Exception scriptException) {
                                         scriptException.printStackTrace();
                                     }
                                     primaryStage.close();
-                                }
-                                else
-                                {
-                                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                            "Error!", "Invalid secret key");
-                                    return;
-                                }
-                            }
+
+
+
                         }
-                    });*/
+                    });
                 }
                 j++;
             }
