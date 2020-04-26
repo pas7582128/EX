@@ -138,7 +138,7 @@ public class Receiver extends Application {
         HBox hbBtn6 = new HBox(10);
         hbBtn6.setAlignment(Pos.BOTTOM_RIGHT);
         hbBtn6.getChildren().add(btn6);
-        grid.add(hbBtn6, 3, Extras.y+1);
+        grid.add(hbBtn6, 4, Extras.y+1);
 
         btn6.setOnAction(new EventHandler<ActionEvent>() {
 
