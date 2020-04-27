@@ -8,6 +8,7 @@ import com.google.firebase.FirebaseOptions;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.Firestore;
 
+import java.io.*;
 import java.security.InvalidKeyException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -49,6 +50,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -60,11 +62,9 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static sample.RSA_key.sign;
 import static sample.RSA_key.verify;
@@ -73,9 +73,38 @@ import static sample.RSA_key.verify;
  *
  * @web http://zoranpavlovic.blogspot.com/
  */
-public class Email extends Application {
+public class Email_File extends Application {
 
     static Cipher cipher;
+
+
+    public static String readFile(File file){
+        StringBuilder stringBuffer = new StringBuilder();
+        BufferedReader bufferedReader = null;
+
+        try {
+
+            bufferedReader = new BufferedReader(new FileReader(file));
+
+            String text;
+            while ((text = bufferedReader.readLine()) != null) {
+                stringBuffer.append(text);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                bufferedReader.close();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return stringBuffer.toString();
+    }
+
     public static void main() {
         launch();
     }
@@ -327,17 +356,55 @@ public class Email extends Application {
 
         final Label body = new Label("Body");
         grid.add(body, 0, Extras.y+8);
+        body.setVisible(false);
 
         final TextArea bodyField = new TextArea();
         grid.add(bodyField, 1, Extras.y+8,6,1);
         //bodyField.setPrefRowCount(10);
-        bodyField.setPrefHeight(700);
+        //bodyField.setPrefHeight(700);
+        bodyField.setVisible(false);
 
+        final Label cf = new Label("Choose File");
+        grid.add(cf, 0, Extras.y+8);
+
+
+        Button btn6= new Button("Choose File");
+        HBox hbBtn1 = new HBox(10);
+        hbBtn1.setAlignment(Pos.BOTTOM_RIGHT);
+        hbBtn1.getChildren().add(btn6);
+        grid.add(hbBtn1, 1, Extras.y+8);
+
+        Label label = new Label("no files selected");
+        grid.add(label, 2, Extras.y+8);
         Button btn5= new Button("Send Email");
         HBox hbBtn = new HBox(10);
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
         hbBtn.getChildren().add(btn5);
         grid.add(hbBtn, 1, Extras.y+9);
+
+
+        btn6.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent e) {
+                FileChooser fileChooser = new FileChooser();
+                //FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+                //fileChooser.getExtensionFilters().add(extFilter);
+                File file = fileChooser.showOpenDialog(primaryStage);
+                if(file != null){
+                    bodyField.setText(readFile(file));
+                    label.setText(file.getAbsolutePath()
+                            + "  selected");
+                }
+                else
+                {
+                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                            "Error!", "No File Chosen");
+                    return;
+                }
+
+            }
+        });
 
         btn5.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -359,10 +426,17 @@ public class Email extends Application {
                             return;
                         }
 
-                        if(bodyField.getText().equals(""))
+                        if(label.getText().equals("no files selected"))
                         {
                             showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                    "Error!", "Body empty");
+                                    "Error!", "No File selected");
+                            return;
+                        }
+
+                        if(bodyField.getText().trim().equals(""))
+                        {
+                            showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                    "Error!", "File empty");
                             return;
                         }
                         String type;
@@ -1042,7 +1116,7 @@ public class Email extends Application {
 
                                                     ApiFuture<WriteResult> future3 = db.collection("send").document(Extras.email).set(docData3);
                                                 }
-                                               /* DocumentReference docRef9 = db.collection("send_list").document(Extras.email);
+                                                /*DocumentReference docRef9 = db.collection("send_list").document(Extras.email);
                                                 ApiFuture<DocumentSnapshot> future9 = docRef9.get();
                                                 DocumentSnapshot document9 = null;
                                                 try {
@@ -1460,13 +1534,13 @@ public class Email extends Application {
             }
         });
 
-        Button btn6= new Button("Home");
+        Button btn8= new Button("Home");
         HBox hbBtn6 = new HBox(10);
         hbBtn6.setAlignment(Pos.BOTTOM_RIGHT);
-        hbBtn.getChildren().add(btn6);
+        hbBtn.getChildren().add(btn8);
         grid.add(hbBtn6, 2, Extras.y+9);
 
-        btn6.setOnAction(new EventHandler<ActionEvent>() {
+        btn8.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent e) {

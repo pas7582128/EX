@@ -50,6 +50,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -486,54 +487,40 @@ public class ReceiveMessage extends Application {
 
                     @Override
                     public void handle(ActionEvent e) {
-                        String name;
-                        showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                "Alert!", "Files will be created in current directory");
-                        while(true)
-                        {
-                            TextInputDialog td = new TextInputDialog("Enter file name");
-                            td.setHeaderText("Enter file name without extension");
-                            td.showAndWait();
-                            name=td.getEditor().getText().trim();
-                            if(name.equals(""))
-                            {
-                                showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                        "Error!", "Enter File name");
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                        try {
+                        FileChooser fil_chooser = new FileChooser();
+                        File file = fil_chooser.showSaveDialog(primaryStage);
 
-                            File myObj = new File(name+".txt");
-                            if (myObj.createNewFile()) {
-                                //System.out.println("File created: " + myObj.getName());
-                            } else {
-                                //System.out.println("File already exists.");
-                            }
-                        } catch (IOException ef) {
-                            System.out.println("An error occurred.");
-                            ef.printStackTrace();
-                        }
-                        try {
-                            FileWriter myWriter = new FileWriter(name+".txt");
-                            String write="";
-                            write+="Sender - "+sf.getText()+"\n\n";
-                            write+="Recipients - "+nameField.getText()+"\n\n";
-                            write+="DateTime - "+tif.getText()+"\n\n";
-                            write+="Subject - "+userTextField.getText()+"\n\n";
-                            write+="Body - "+bodyField.getText()+"\n\n";
-                            myWriter.write(write);
-                            myWriter.close();
-
+                        if (file != null) {
                             showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                    "Success!", "Successfully written to file "+name+".txt");
-                        } catch (IOException ef) {
-                            System.out.println("An error occurred.");
-                            ef.printStackTrace();
+                                    "Alert!", file.getAbsolutePath()
+                                            + "  selected");
+
+
+                            try {
+                                FileWriter myWriter = new FileWriter(file.getAbsolutePath());
+                                String write="";
+                                write+="Sender - "+sf.getText()+"\n\n";
+                                write+="Recipients - "+nameField.getText()+"\n\n";
+                                write+="DateTime - "+tif.getText()+"\n\n";
+                                write+="Subject - "+userTextField.getText()+"\n\n";
+                                write+="Body - "+bodyField.getText()+"\n\n";
+                                myWriter.write(write);
+                                myWriter.close();
+
+                                showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                        "Success!", "Successfully written to file "+file.getAbsolutePath());
+                            } catch (IOException ef) {
+                                System.out.println("An error occurred.");
+                                ef.printStackTrace();
+                            }
                         }
+                        else
+                        {
+                            showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                    "Alert!","No file selected");
+                        }
+
+
 
                     }
                 });
