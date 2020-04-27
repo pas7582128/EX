@@ -265,7 +265,7 @@ public class Receiver extends Application {
 
                        @Override
                        public void handle(ActionEvent e) {
-                           if(document1[finalJ].get("algorithm").toString().equals("01"))
+                           if(document1[finalJ].get("algorithm").toString().equals("01")||document1[finalJ].get("algorithm").toString().equals("11"))
                            {
                                TextInputDialog td = new TextInputDialog("Enter Key");
                                td.setHeaderText("Enter secret key");
@@ -300,7 +300,7 @@ public class Receiver extends Application {
                                    return;
                                }
                            }
-                           else if(document1[finalJ].get("algorithm").toString().equals("00"))
+                           else if(document1[finalJ].get("algorithm").toString().equals("00")||document1[finalJ].get("algorithm").toString().equals("10"))
                            {
                                TextInputDialog td = new TextInputDialog("Enter Passphrase");
                                td.setHeaderText("Enter passphrase for decryption");
@@ -357,6 +357,7 @@ public class Receiver extends Application {
                                    }
                                }
                            }
+
                        }
                    });
                }

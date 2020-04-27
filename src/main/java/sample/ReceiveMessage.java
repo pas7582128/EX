@@ -62,6 +62,8 @@ import java.security.NoSuchAlgorithmException;
 
 import java.util.concurrent.ExecutionException;
 
+import static sample.RSA_key.verify;
+
 /**
  *
  * @web http://zoranpavlovic.blogspot.com/
@@ -292,6 +294,175 @@ public class ReceiveMessage extends Application {
                     {
 
                     }
+
+                }
+                else if(document1.get("algorithm").toString().equals("10"))
+                {
+
+                    DocumentReference docRef12 = db.collection("asymmetric").document(Extras.email);
+                    ApiFuture<DocumentSnapshot> future12 = docRef12.get();
+                    DocumentSnapshot document12 = null;
+                    try {
+                        document12 = future12.get();
+                    } catch (InterruptedException interruptedException) {
+                        interruptedException.printStackTrace();
+                    } catch (ExecutionException executionException) {
+                        executionException.printStackTrace();
+                    }
+                    if (document12.exists())
+                    {
+                        String decryptedString="";
+                        try {
+                            for(int i=Extras.user_key.length();i<16;i++)
+                            {
+                                Extras.user_key+="0";
+                            }
+                            SecretKey originalKey2 = new SecretKeySpec(Extras.user_key.getBytes(), 0, Extras.user_key.getBytes().length, "AES");
+                            String kas=decrypt(document12.get("encrypted_private_key").toString(),originalKey2);
+                            decryptedString = RSA_key.decrypt(document.get(Mi + "-body").toString(), kas);
+
+                            String sk=document.get(Mi+"-sid").toString();
+                            DocumentReference docRef92 = db.collection("sign").document(document1.get("sender").toString());
+                            ApiFuture<DocumentSnapshot> future92 = docRef92.get();
+                            DocumentSnapshot document92 = null;
+                            try {
+                                document92 = future92.get();
+                            } catch (InterruptedException interruptedException) {
+                                interruptedException.printStackTrace();
+                            } catch (ExecutionException executionException) {
+                                executionException.printStackTrace();
+                            }
+                            if (document92.exists())
+                            {
+                                if(document92.get("id").toString().equals(sk))
+                                {
+                                    int w=decryptedString.indexOf('@');
+                                    int signature_l=Integer.parseInt(decryptedString.substring(0,w));
+                                    String signature=decryptedString.substring(w+1,w+1+signature_l);
+                                    String mess=decryptedString.substring(w+1+signature_l);
+                                    String md_mess=MD5.getMd5(mess);
+
+                                    boolean isCorrect = verify(md_mess, signature, RSA_key.getPublicKey(document92.get("public_key").toString()));
+                                    if(isCorrect==true)
+                                    {
+
+                                        showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                                "Success!", "Signature verified successfully");
+                                        bodyField.setText(mess);
+                                    }
+                                    else
+                                    {
+                                        showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                                "Error!", "Invalid signature");
+                                    }
+                                }
+                                else
+                                {
+
+                                }
+                            }
+                            else
+                            {
+
+                            }
+                            //System.out.println(decryptedString);
+                            //bodyField.setText(decryptedString);
+                        } catch (NoSuchAlgorithmException e) {
+                            System.err.println(e.getMessage());
+                        } catch (NoSuchPaddingException e) {
+                            e.printStackTrace();
+                        } catch (InvalidKeyException e) {
+                            e.printStackTrace();
+                        } catch (IllegalBlockSizeException e) {
+                            e.printStackTrace();
+                        } catch (BadPaddingException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                    else
+                    {
+
+                    }
+
+                }
+                else
+                {
+                    for (int i = Extras.user_key.length(); i < 16; i++) {
+                        Extras.user_key += "0";
+                    }
+                    String a = "";
+                    SecretKey originalKey2 = new SecretKeySpec(Extras.user_key.getBytes(), 0, Extras.user_key.getBytes().length, "AES");
+                    try {
+                        a = decrypt(document.get(Mi + "-body").toString(), originalKey2);
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
+
+                        String decryptedString=a;
+                        try {
+                            String sk=document.get(Mi+"-sid").toString();
+                            DocumentReference docRef92 = db.collection("sign").document(document1.get("sender").toString());
+                            ApiFuture<DocumentSnapshot> future92 = docRef92.get();
+                            DocumentSnapshot document92 = null;
+                            try {
+                                document92 = future92.get();
+                            } catch (InterruptedException interruptedException) {
+                                interruptedException.printStackTrace();
+                            } catch (ExecutionException executionException) {
+                                executionException.printStackTrace();
+                            }
+                            if (document92.exists())
+                            {
+                                if(document92.get("id").toString().equals(sk))
+                                {
+                                    int w=decryptedString.indexOf('@');
+                                    int signature_l=Integer.parseInt(decryptedString.substring(0,w));
+                                    String signature=decryptedString.substring(w+1,w+1+signature_l);
+                                    String mess=decryptedString.substring(w+1+signature_l);
+                                    String md_mess=MD5.getMd5(mess);
+
+                                    boolean isCorrect = verify(md_mess, signature, RSA_key.getPublicKey(document92.get("public_key").toString()));
+                                    if(isCorrect==true)
+                                    {
+
+                                        showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                                "Success!", "Signature verified successfully");
+                                        bodyField.setText(mess);
+                                    }
+                                    else
+                                    {
+                                        showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                                "Error!", "Invalid signature");
+                                    }
+                                }
+                                else
+                                {
+
+                                }
+                            }
+                            else
+                            {
+
+                            }
+                            //System.out.println(decryptedString);
+                            //bodyField.setText(decryptedString);
+                        } catch (NoSuchAlgorithmException e) {
+                            System.err.println(e.getMessage());
+                        } catch (NoSuchPaddingException e) {
+                            e.printStackTrace();
+                        } catch (InvalidKeyException e) {
+                            e.printStackTrace();
+                        } catch (IllegalBlockSizeException e) {
+                            e.printStackTrace();
+                        } catch (BadPaddingException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
 
                 }
                 sf.setText(document1.get("sender").toString());
