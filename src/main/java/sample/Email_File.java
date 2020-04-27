@@ -548,7 +548,7 @@ public class Email_File extends Application {
 
                                         ApiFuture<WriteResult> future3 = db.collection("send").document(Extras.email).set(docData3);
                                     }
-                                    DocumentReference docRef9 = db.collection("send_list").document(Extras.email);
+                                    /*DocumentReference docRef9 = db.collection("send_list").document(Extras.email);
                                     ApiFuture<DocumentSnapshot> future9 = docRef9.get();
                                     DocumentSnapshot document9 = null;
                                     try {
@@ -589,7 +589,7 @@ public class Email_File extends Application {
                                         docData9.put("send", tu);
 
                                         ApiFuture<WriteResult> future91 = db.collection("send_list").document(Extras.email).set(docData9);
-                                    }
+                                    }*/
                                     String a="",cs="";
                                     SecretKey originalKey1 = new SecretKeySpec(Extras.AES_KEY.getBytes(), 0, Extras.AES_KEY.getBytes().length, "AES");
                                     try {
@@ -788,7 +788,7 @@ public class Email_File extends Application {
 
                                         ApiFuture<WriteResult> future3 = db.collection("send").document(Extras.email).set(docData3);
                                     }
-                                    DocumentReference docRef9 = db.collection("send_list").document(Extras.email);
+                                    /*DocumentReference docRef9 = db.collection("send_list").document(Extras.email);
                                     ApiFuture<DocumentSnapshot> future9 = docRef9.get();
                                     DocumentSnapshot document9 = null;
                                     try {
@@ -829,7 +829,7 @@ public class Email_File extends Application {
                                         docData9.put("send", tu);
 
                                         ApiFuture<WriteResult> future91 = db.collection("send_list").document(Extras.email).set(docData9);
-                                    }
+                                    }*/
                                     String a="",cs="";
                                     SecretKey originalKey1 = new SecretKeySpec(Extras.AES_KEY.getBytes(), 0, Extras.AES_KEY.getBytes().length, "AES");
                                     try {
@@ -1116,7 +1116,7 @@ public class Email_File extends Application {
 
                                                     ApiFuture<WriteResult> future3 = db.collection("send").document(Extras.email).set(docData3);
                                                 }
-                                                DocumentReference docRef9 = db.collection("send_list").document(Extras.email);
+                                                /*DocumentReference docRef9 = db.collection("send_list").document(Extras.email);
                                                 ApiFuture<DocumentSnapshot> future9 = docRef9.get();
                                                 DocumentSnapshot document9 = null;
                                                 try {
@@ -1157,7 +1157,7 @@ public class Email_File extends Application {
                                                     docData9.put("send", tu);
 
                                                     ApiFuture<WriteResult> future91 = db.collection("send_list").document(Extras.email).set(docData9);
-                                                }
+                                                }*/
                                                 String a="",cs="";
                                                 SecretKey originalKey1 = new SecretKeySpec(Extras.AES_KEY.getBytes(), 0, Extras.AES_KEY.getBytes().length, "AES");
                                                 try {
@@ -1358,7 +1358,7 @@ public class Email_File extends Application {
 
                                                     ApiFuture<WriteResult> future3 = db.collection("send").document(Extras.email).set(docData3);
                                                 }
-                                                DocumentReference docRef9 = db.collection("send_list").document(Extras.email);
+                                                /*DocumentReference docRef9 = db.collection("send_list").document(Extras.email);
                                                 ApiFuture<DocumentSnapshot> future9 = docRef9.get();
                                                 DocumentSnapshot document9 = null;
                                                 try {
@@ -1399,7 +1399,7 @@ public class Email_File extends Application {
                                                     docData9.put("send", tu);
 
                                                     ApiFuture<WriteResult> future91 = db.collection("send_list").document(Extras.email).set(docData9);
-                                                }
+                                                }*/
                                                 String a="",cs="";
                                                 SecretKey originalKey1 = new SecretKeySpec(Extras.AES_KEY.getBytes(), 0, Extras.AES_KEY.getBytes().length, "AES");
                                                 try {
