@@ -67,7 +67,6 @@ public class Home extends Application {
         grid.setAlignment(Pos.TOP_CENTER);
 
 
-
         Text scenetitle = new Text("Home");
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(scenetitle, 6, 0);
@@ -83,18 +82,6 @@ public class Home extends Application {
         hb_send2.setAlignment(Pos.CENTER);
         hb_send2.getChildren().add(btn_send2);
         grid.add(hb_send2,4,4,4,2);
-        btn_send2.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent e) {
-                try {
-                    new Email_File().start(new Stage());
-                } catch (Exception scriptException) {
-                    scriptException.printStackTrace();
-                }
-                primaryStage.close();
-            }
-        });
 
         Button btn_view_sent = new Button("View sent msg");
         HBox hb_view_sent = new HBox(10);
@@ -138,6 +125,19 @@ public class Home extends Application {
             public void handle(ActionEvent e) {
                 try {
                     new Email().start(new Stage());
+                } catch (Exception scriptException) {
+                    scriptException.printStackTrace();
+                }
+                primaryStage.close();
+            }
+        });
+
+        btn_send2.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent e) {
+                try {
+                    new Email_File().start(new Stage());
                 } catch (Exception scriptException) {
                     scriptException.printStackTrace();
                 }
