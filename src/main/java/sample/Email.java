@@ -66,6 +66,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ExecutionException;
 
+import static sample.RSA_key.sign;
+import static sample.RSA_key.verify;
+
 /**
  *
  * @web http://zoranpavlovic.blogspot.com/
@@ -799,7 +802,7 @@ public class Email extends Application {
                                         {
                                             String encryptedString="";
                                             try {
-                                                encryptedString = Base64.getEncoder().encodeToString(RSA_key.encrypt(bodyField.getText(), document22.get("public_key").toString()));
+                                                encryptedString = RSA_key.encrypt(bodyField.getText(), document22.get("public_key").toString());
                                             } catch (NoSuchAlgorithmException e) {
                                                 System.err.println(e.getMessage());
                                             } catch (NoSuchPaddingException e) {
@@ -866,6 +869,591 @@ public class Email extends Application {
                                         "Success", "Message sent Successfully");
                             }
                         }
+                        else
+                        {
+                            type="1";
+
+                            TextInputDialog td = new TextInputDialog("Enter passphrase");
+                            td.setHeaderText("Enter passphrase for signing");
+                            PasswordField pwd = new PasswordField();
+                            HBox content = new HBox();
+                            content.setAlignment(Pos.CENTER_LEFT);
+                            content.setSpacing(10);
+                            content.getChildren().addAll(new Label("Password"), pwd);
+                            td.getDialogPane().setContent(content);
+                            td.showAndWait();
+
+                            if(pwd.getText().trim().length()==0)
+                            {
+                                showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                        "Error!", "Passphrase not entered");
+                                return;
+                            }
+                            else
+                            {
+                                String p1=MD5.getMd5(pwd.getText().trim());
+                                DocumentReference docRef22 = db.collection("sign").document(Extras.email);
+                                ApiFuture<DocumentSnapshot> future22 = docRef22.get();
+                                DocumentSnapshot document22 = null;
+                                try {
+                                    document22 = future22.get();
+                                } catch (InterruptedException interruptedException) {
+                                    interruptedException.printStackTrace();
+                                } catch (ExecutionException executionException) {
+                                    executionException.printStackTrace();
+                                }
+                                if (document22.exists())
+                                {
+                                    if(p1.equals(document22.get("passphrase").toString()))
+                                    {
+                                        String hs=MD5.getMd5(bodyField.getText().trim());
+                                        String pw=pwd.getText().trim(),signature="";
+                                        //System.out.println(document22.get("encrypted_private_key").toString());
+                                        try {
+                                            cipher = Cipher.getInstance("AES");
+                                        } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
+                                            noSuchAlgorithmException.printStackTrace();
+                                        } catch (NoSuchPaddingException noSuchPaddingException) {
+                                            noSuchPaddingException.printStackTrace();
+                                        }
+                                        String encryptedString="",kas="",te="";
+                                        try {
+                                            for(int i=pw.length();i<16;i++)
+                                            {
+                                                pw+="0";
+                                            }
+                                            SecretKey originalKey2 = new SecretKeySpec(pw.getBytes(), 0, pw.getBytes().length, "AES");
+                                            kas=decrypt(document22.get("encrypted_private_key").toString(),originalKey2);
+                                            signature = sign(hs,RSA_key.getPrivateKey( kas));
+                                            //System.out.println(signature);
+
+                                            te=signature.length()+"@"+signature+bodyField.getText().trim();
+
+                                        } catch (NoSuchAlgorithmException e) {
+                                            System.err.println(e.getMessage());
+                                        } catch (NoSuchPaddingException e) {
+                                            e.printStackTrace();
+                                        } catch (InvalidKeyException e) {
+                                            e.printStackTrace();
+                                        } catch (IllegalBlockSizeException e) {
+                                            e.printStackTrace();
+                                        } catch (BadPaddingException e) {
+                                            e.printStackTrace();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        if(tv1.equals("You, recipients share a secret"))
+                                        {
+                                            type+="1";
+                                            String value=nameField.getText();
+                                            String arr[] = value.split("\n");
+                                            String arr1[]=new String[arr.length];
+                                            int i;
+                                            for(i=0;i<arr.length;i++)
+                                            {
+                                                td = new TextInputDialog("Enter Key");
+                                                td.setHeaderText("Enter key for "+arr[i]);
+                                                pwd = new PasswordField();
+                                                content = new HBox();
+                                                content.setAlignment(Pos.CENTER_LEFT);
+                                                content.setSpacing(10);
+                                                content.getChildren().addAll(new Label("Password"), pwd);
+                                                td.getDialogPane().setContent(content);
+                                                td.showAndWait();
+
+                                                if(pwd.getText().trim().length()==0)
+                                                {
+                                                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                                            "Error!", "Enter key");
+                                                    i--;
+                                                }
+                                                else if(pwd.getText().trim().length()>16)
+                                                {
+                                                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                                            "Error!", "Key must be atmost 16 characters");
+                                                    i--;
+                                                }
+                                                else
+                                                {
+                                                    arr1[i]=pwd.getText().trim();
+                                                }
+                                            }
+                                            try {
+                                                KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+                                            } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
+                                                noSuchAlgorithmException.printStackTrace();
+                                            }
+                                            try {
+                                                cipher = Cipher.getInstance("AES");
+                                            } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
+                                                noSuchAlgorithmException.printStackTrace();
+                                            } catch (NoSuchPaddingException noSuchPaddingException) {
+                                                noSuchPaddingException.printStackTrace();
+                                            }
+                                            DocumentReference docRef = db.collection("count").document("msg");
+                                            ApiFuture<DocumentSnapshot> future = docRef.get();
+                                            DocumentSnapshot document = null;
+                                            try {
+                                                document = future.get();
+                                            } catch (InterruptedException interruptedException) {
+                                                interruptedException.printStackTrace();
+                                            } catch (ExecutionException executionException) {
+                                                executionException.printStackTrace();
+                                            }
+                                            if (document.exists()) {
+                                                Long c= (Long) document.get("count");
+                                                c++;
+                                                Date dNow = new Date( );
+                                                SimpleDateFormat ft =
+                                                        new SimpleDateFormat ("yyyy.MM.dd hh:mm:ss");
+
+                                                docRef = db.collection("count").document("msg");
+                                                ApiFuture<WriteResult>future5 = docRef.update("count", c);
+                                                try {
+                                                    WriteResult result = future5.get();
+                                                } catch (InterruptedException interruptedException) {
+                                                    interruptedException.printStackTrace();
+                                                } catch (ExecutionException executionException) {
+                                                    executionException.printStackTrace();
+                                                }
+                                                DocumentReference docRef2 = db.collection("send").document(Extras.email);
+                                                ApiFuture<DocumentSnapshot> future2 = docRef2.get();
+                                                DocumentSnapshot document2 = null;
+                                                try {
+                                                    document2 = future2.get();
+                                                }  catch (InterruptedException interruptedException) {
+                                                    interruptedException.printStackTrace();
+                                                } catch (ExecutionException executionException) {
+                                                    executionException.printStackTrace();
+                                                }
+                                                if(document2.exists())
+                                                {
+                                                    String p=document2.get("send").toString();
+                                                    p+=","+"M"+c;
+                                                    Map<String, Object> docData3 = new HashMap();
+                                                    docData3.put("send", p);
+
+                                                    ApiFuture<WriteResult> future3 = db.collection("send").document(Extras.email).set(docData3);
+                                                }
+                                                else
+                                                {
+                                                    Map<String, Object> docData3 = new HashMap();
+                                                    docData3.put("send", "M"+c);
+
+                                                    ApiFuture<WriteResult> future3 = db.collection("send").document(Extras.email).set(docData3);
+                                                }
+                                                DocumentReference docRef9 = db.collection("send_list").document(Extras.email);
+                                                ApiFuture<DocumentSnapshot> future9 = docRef9.get();
+                                                DocumentSnapshot document9 = null;
+                                                try {
+                                                    document9 = future9.get();
+                                                }  catch (InterruptedException interruptedException) {
+                                                    interruptedException.printStackTrace();
+                                                } catch (ExecutionException executionException) {
+                                                    executionException.printStackTrace();
+                                                }
+                                                String tu ="";
+                                                for(int ij=0;ij<arr.length-1;ij++)
+                                                {
+                                                    tu+=arr[ij]+",";
+                                                }
+                                                tu+=arr[arr.length-1];
+                                                if(document9.exists())
+                                                {
+                                                    String p=document9.get("send").toString();
+                                                    for(int ik=0;ik<arr.length;ik++)
+                                                    {
+                                                        if(p.contains(arr[ik]))
+                                                        {
+
+                                                        }
+                                                        else
+                                                        {
+                                                            p+=","+arr[ik];
+                                                        }
+                                                    }
+                                                    Map<String, Object> docData9 = new HashMap();
+                                                    docData9.put("send", p);
+
+                                                    ApiFuture<WriteResult> future91 = db.collection("send_list").document(Extras.email).set(docData9);
+                                                }
+                                                else
+                                                {
+                                                    Map<String, Object> docData9 = new HashMap();
+                                                    docData9.put("send", tu);
+
+                                                    ApiFuture<WriteResult> future91 = db.collection("send_list").document(Extras.email).set(docData9);
+                                                }
+                                                String a="",cs="";
+                                                SecretKey originalKey1 = new SecretKeySpec(Extras.AES_KEY.getBytes(), 0, Extras.AES_KEY.getBytes().length, "AES");
+                                                try {
+                                                    a=encrypt(userTextField.getText().trim(), originalKey1);
+                                                } catch (Exception exception) {
+                                                    exception.printStackTrace();
+                                                }
+                                                try {
+                                                    cs=encrypt(bodyField.getText().trim(), originalKey1);
+                                                } catch (Exception exception) {
+                                                    exception.printStackTrace();
+                                                }
+                                                Map<String, Object> docData = new HashMap();
+                                                docData.put("id", "M"+c);
+                                                docData.put("sender", Extras.email);
+                                                docData.put("algorithm", type);
+                                                docData.put("recipients", nameField.getText());
+                                                docData.put("Date", ft.format(dNow));
+                                                docData.put("sub",a);
+                                                docData.put("body",cs);
+
+                                                ApiFuture<WriteResult> future1 = db.collection("messages").document("M"+c).set(docData);
+                                                for(i=0;i<arr.length;i++)
+                                                {
+                                                    String b="";
+
+                                                    String ke=arr1[i];
+                                                    for(int q=arr1[i].length();q<16;q++)
+                                                    {
+                                                        ke+="0";
+                                                    }
+                                                    SecretKey originalKey = new SecretKeySpec(ke.getBytes(), 0, ke.getBytes().length, "AES");
+                                                    try {
+                                                        //System.out.println(te+"\n"+signature);
+                                                        b=encrypt(te, originalKey);
+                                                    } catch (Exception exception) {
+                                                        exception.printStackTrace();
+                                                    }
+
+                                                    DocumentReference docRef4 = db.collection("receive").document(arr[i]);
+                                                    ApiFuture<DocumentSnapshot> future4 = docRef4.get();
+                                                    DocumentSnapshot document4 = null;
+                                                    try {
+                                                        document4 = future4.get();
+                                                    } catch (InterruptedException interruptedException) {
+                                                        interruptedException.printStackTrace();
+                                                    } catch (ExecutionException executionException) {
+                                                        executionException.printStackTrace();
+                                                    }
+                                                    if(document4.exists())
+                                                    {
+                                                        String p=document4.get("receive").toString();
+                                                        p+=","+"M"+c;
+                                                        docRef = db.collection("receive").document(arr[i]);
+                                                        ApiFuture<WriteResult>future6 = docRef.update("receive", p);
+                                                        future6=docRef.update("M"+c+"-key",MD5.getMd5(arr1[i]));
+
+                                                        future6=docRef.update("M"+c+"-body",b);
+                                                        future6=docRef.update("M"+c+"-sid",document22.get("id").toString());
+                                                        try {
+                                                            WriteResult result = future6.get();
+                                                        } catch (InterruptedException interruptedException) {
+                                                            interruptedException.printStackTrace();
+                                                        } catch (ExecutionException executionException) {
+                                                            executionException.printStackTrace();
+                                                        }
+
+                                                    }
+                                                    else
+                                                    {
+                                                        Map<String, Object> docData6 = new HashMap();
+                                                        docData6.put("receive", "M"+c);
+                                                        docData6.put("M"+c+"-key",MD5.getMd5(arr1[i]));
+
+                                                        docData6.put("M"+c+"-body",b);
+                                                        docData6.put("M"+c+"-sid",document22.get("id").toString());
+                                                        ApiFuture<WriteResult> future6 = db.collection("receive").document(arr[i]).set(docData6);
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+
+                                            }
+                                            showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                                    "Success", "Message sent Successfully");
+                                        }
+                                        else
+                                        {
+                                            type+="0";
+                                            String value=nameField.getText();
+                                            String arr[] = value.split("\n");
+                                            int l=arr.length;
+                                            ArrayList<String>a1=new ArrayList<String>();
+                                            ArrayList<String>a2=new ArrayList<String>();
+                                            int i;
+                                            for(i=0;i<l;i++)
+                                            {
+                                                DocumentReference docRef21 = db.collection("asymmetric").document(arr[i]);
+                                                ApiFuture<DocumentSnapshot> future21 = docRef21.get();
+                                                DocumentSnapshot document21 = null;
+                                                try {
+                                                    document21 = future21.get();
+                                                } catch (InterruptedException interruptedException) {
+                                                    interruptedException.printStackTrace();
+                                                } catch (ExecutionException executionException) {
+                                                    executionException.printStackTrace();
+                                                }
+                                                if (document21.exists())
+                                                {
+                                                    a1.add(arr[i]);
+                                                }
+                                                else
+                                                {
+                                                    a2.add(arr[i]);
+                                                }
+                                            }
+                                            if(a2.size()==l)
+                                            {
+                                                showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                                        "Error", "Message can't be sent\nNone of the recipients have a registered key");
+                                                nameField.setText("");
+                                                return;
+                                            }
+                                            String err="";
+                                            if(a1.size()!=l)
+                                            {
+                                                for(i=0;i<a2.size()-1;i++)
+                                                {
+                                                    err+=a2.get(i)+",";
+                                                }
+                                                err+=a2.get(a2.size()-1);
+                                                showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                                        "Error", "Message can,t be sent to these recipients as they do not have a registered key\n"+err);
+                                            }
+
+                                            try {
+                                                KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+                                            } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
+                                                noSuchAlgorithmException.printStackTrace();
+                                            }
+                                            try {
+                                                cipher = Cipher.getInstance("AES");
+                                            } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
+                                                noSuchAlgorithmException.printStackTrace();
+                                            } catch (NoSuchPaddingException noSuchPaddingException) {
+                                                noSuchPaddingException.printStackTrace();
+                                            }
+                                            DocumentReference docRef = db.collection("count").document("msg");
+                                            ApiFuture<DocumentSnapshot> future = docRef.get();
+                                            DocumentSnapshot document = null;
+                                            try {
+                                                document = future.get();
+                                            } catch (InterruptedException interruptedException) {
+                                                interruptedException.printStackTrace();
+                                            } catch (ExecutionException executionException) {
+                                                executionException.printStackTrace();
+                                            }
+                                            if (document.exists()) {
+                                                Long c= (Long) document.get("count");
+                                                c++;
+                                                Date dNow = new Date( );
+                                                SimpleDateFormat ft =
+                                                        new SimpleDateFormat ("yyyy.MM.dd hh:mm:ss");
+
+                                                docRef = db.collection("count").document("msg");
+                                                ApiFuture<WriteResult>future5 = docRef.update("count", c);
+                                                try {
+                                                    WriteResult result = future5.get();
+                                                } catch (InterruptedException interruptedException) {
+                                                    interruptedException.printStackTrace();
+                                                } catch (ExecutionException executionException) {
+                                                    executionException.printStackTrace();
+                                                }
+                                                DocumentReference docRef2 = db.collection("send").document(Extras.email);
+                                                ApiFuture<DocumentSnapshot> future2 = docRef2.get();
+                                                DocumentSnapshot document2 = null;
+                                                try {
+                                                    document2 = future2.get();
+                                                }  catch (InterruptedException interruptedException) {
+                                                    interruptedException.printStackTrace();
+                                                } catch (ExecutionException executionException) {
+                                                    executionException.printStackTrace();
+                                                }
+                                                if(document2.exists())
+                                                {
+                                                    String p=document2.get("send").toString();
+                                                    p+=","+"M"+c;
+                                                    Map<String, Object> docData3 = new HashMap();
+                                                    docData3.put("send", p);
+
+                                                    ApiFuture<WriteResult> future3 = db.collection("send").document(Extras.email).set(docData3);
+                                                }
+                                                else
+                                                {
+                                                    Map<String, Object> docData3 = new HashMap();
+                                                    docData3.put("send", "M"+c);
+
+                                                    ApiFuture<WriteResult> future3 = db.collection("send").document(Extras.email).set(docData3);
+                                                }
+                                                DocumentReference docRef9 = db.collection("send_list").document(Extras.email);
+                                                ApiFuture<DocumentSnapshot> future9 = docRef9.get();
+                                                DocumentSnapshot document9 = null;
+                                                try {
+                                                    document9 = future9.get();
+                                                }  catch (InterruptedException interruptedException) {
+                                                    interruptedException.printStackTrace();
+                                                } catch (ExecutionException executionException) {
+                                                    executionException.printStackTrace();
+                                                }
+                                                String tu ="";
+                                                for(int ij=0;ij<a1.size()-1;ij++)
+                                                {
+                                                    tu+=a1.get(ij)+",";
+                                                }
+                                                tu+=a1.get(a1.size()-1);
+                                                if(document9.exists())
+                                                {
+                                                    String p=document9.get("send").toString();
+                                                    for(int ik=0;ik<a1.size();ik++)
+                                                    {
+                                                        if(p.contains(a1.get(ik)))
+                                                        {
+
+                                                        }
+                                                        else
+                                                        {
+                                                            p+=","+a1.get(ik);
+                                                        }
+                                                    }
+                                                    Map<String, Object> docData9 = new HashMap();
+                                                    docData9.put("send", p);
+
+                                                    ApiFuture<WriteResult> future91 = db.collection("send_list").document(Extras.email).set(docData9);
+                                                }
+                                                else
+                                                {
+                                                    Map<String, Object> docData9 = new HashMap();
+                                                    docData9.put("send", tu);
+
+                                                    ApiFuture<WriteResult> future91 = db.collection("send_list").document(Extras.email).set(docData9);
+                                                }
+                                                String a="",cs="";
+                                                SecretKey originalKey1 = new SecretKeySpec(Extras.AES_KEY.getBytes(), 0, Extras.AES_KEY.getBytes().length, "AES");
+                                                try {
+                                                    a=encrypt(userTextField.getText().trim(), originalKey1);
+                                                } catch (Exception exception) {
+                                                    exception.printStackTrace();
+                                                }
+                                                try {
+                                                    cs=encrypt(bodyField.getText().trim(), originalKey1);
+                                                } catch (Exception exception) {
+                                                    exception.printStackTrace();
+                                                }
+                                                Map<String, Object> docData = new HashMap();
+                                                docData.put("id", "M"+c);
+                                                docData.put("sender", Extras.email);
+                                                docData.put("algorithm", type);
+                                                String abcd="";
+                                                for(int y=0;y<a1.size()-1;y++)
+                                                {
+                                                    abcd+=a1.get(y)+",";
+                                                }
+                                                abcd+=a1.get(a1.size()-1);
+                                                docData.put("recipients", abcd);
+                                                docData.put("Date", ft.format(dNow));
+                                                docData.put("sub",a);
+                                                docData.put("body",cs);
+
+
+                                                ApiFuture<WriteResult> future1 = db.collection("messages").document("M"+c).set(docData);
+
+                                                for(i=0;i<a1.size();i++)
+                                                {
+                                                    DocumentReference docRef32 = db.collection("asymmetric").document(a1.get(i));
+                                                    ApiFuture<DocumentSnapshot> future32 = docRef32.get();
+                                                    DocumentSnapshot document32 = null;
+                                                    try {
+                                                        document32 = future32.get();
+                                                    } catch (InterruptedException interruptedException) {
+                                                        interruptedException.printStackTrace();
+                                                    } catch (ExecutionException executionException) {
+                                                        executionException.printStackTrace();
+                                                    }
+                                                    if (document32.exists())
+                                                    {
+                                                        encryptedString="";
+                                                        try {
+                                                            encryptedString = RSA_key.encrypt(te, document32.get("public_key").toString());
+                                                        } catch (NoSuchAlgorithmException e) {
+                                                            System.err.println(e.getMessage());
+                                                        } catch (NoSuchPaddingException e) {
+                                                            e.printStackTrace();
+                                                        } catch (InvalidKeyException e) {
+                                                            e.printStackTrace();
+                                                        } catch (IllegalBlockSizeException e) {
+                                                            e.printStackTrace();
+                                                        } catch (BadPaddingException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                        DocumentReference docRef4 = db.collection("receive").document(a1.get(i));
+                                                        ApiFuture<DocumentSnapshot> future4 = docRef4.get();
+                                                        DocumentSnapshot document4 = null;
+                                                        try {
+                                                            document4 = future4.get();
+                                                        } catch (InterruptedException interruptedException) {
+                                                            interruptedException.printStackTrace();
+                                                        } catch (ExecutionException executionException) {
+                                                            executionException.printStackTrace();
+                                                        }
+                                                        if(document4.exists())
+                                                        {
+                                                            String p=document4.get("receive").toString();
+                                                            p+=","+"M"+c;
+                                                            docRef = db.collection("receive").document(a1.get(i));
+                                                            ApiFuture<WriteResult>future6 = docRef.update("receive", p);
+
+                                                            future6=docRef.update("M"+c+"-id",document32.get("id"));
+                                                            future6=docRef.update("M"+c+"-sid",document22.get("id"));
+
+                                                            future6=docRef.update("M"+c+"-body",encryptedString);
+                                                            try {
+                                                                WriteResult result = future6.get();
+                                                            } catch (InterruptedException interruptedException) {
+                                                                interruptedException.printStackTrace();
+                                                            } catch (ExecutionException executionException) {
+                                                                executionException.printStackTrace();
+                                                            }
+
+                                                        }
+                                                        else
+                                                        {
+                                                            Map<String, Object> docData6 = new HashMap();
+                                                            docData6.put("receive", "M"+c);
+                                                            docData6.put("M"+c+"-id",document32.get("id"));
+                                                            docData6.put("M"+c+"-sid",document22.get("id"));
+                                                            docData6.put("M"+c+"-body",encryptedString);
+                                                            ApiFuture<WriteResult> future6 = db.collection("receive").document(a1.get(i)).set(docData6);
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+
+                                                    }
+                                                }
+
+
+                                            }
+                                            else
+                                            {
+
+                                            }
+                                            showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                                    "Success", "Message sent Successfully");
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                                "Error!", "Invalid passphrase");
+                                        return;
+                                    }
+                                }
+                                else
+                                {
+
+                                }
+                            }
+                        }
 
                     }
                 });
@@ -899,103 +1487,17 @@ public class Email extends Application {
             }
         });
 
-        /*Button btn1 = new Button("Go to Login page");
-        HBox hbBtn1 = new HBox(10);
-        hbBtn1.setAlignment(Pos.BOTTOM_RIGHT);
-        hbBtn1.getChildren().add(btn1);
-        grid.add(hbBtn1, 2, 10);
-
-        final Text actiontarget = new Text();
-        grid.add(actiontarget, 1, 6);
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent e) {
-
-                if(nameField.getText().trim().isEmpty()) {
-                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                            "Form Error!", "Please enter your Name");
-                    return;
-                }
-
-                if(userTextField.getText().trim().isEmpty()) {
-                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                            "Form Error!", "Please enter your Email address");
-                    return;
-                }
-                if(pwBox.getText().trim().isEmpty()) {
-                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                            "Form Error!", "Please enter your password");
-                    return;
-                }
-
-                if(pwBox.getText().trim().length()<8) {
-                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                            "Form Error!", "Password must be atleast 8 characters long");
-                    return;
-                }
-
-
-                DocumentReference docRef = db.collection("login_credentials").document(userTextField.getText().trim());
-// asynchronously retrieve the document
-                ApiFuture<DocumentSnapshot> future = docRef.get();
-// ...
-// future.get() blocks on response
-                DocumentSnapshot document = null;
-                try {
-                    document = future.get();
-                } catch (InterruptedException interruptedException) {
-                    interruptedException.printStackTrace();
-                } catch (ExecutionException executionException) {
-                    executionException.printStackTrace();
-                }
-                if (document.exists()) {
-                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                            "Error!", "Email id already exists");
-                    return;
-                } else {
-                    Map<String, Object> docData = new HashMap();
-                    docData.put("name", nameField.getText().trim());
-                    docData.put("email_id", userTextField.getText().trim());
-                    docData.put("password", MD5.getMd5(pwBox.getText().trim()));
-
-// Add a new document (asynchronously) in collection "cities" with id "LA"
-                    ApiFuture<WriteResult> future1 = db.collection("login_credentials").document(userTextField.getText().trim()).set(docData);
-// ...
-// future.get() blocks on response
-                    try {
-                        System.out.println("Update time : " + future1.get().getUpdateTime());
-                    } catch (InterruptedException interruptedException) {
-                        interruptedException.printStackTrace();
-                    } catch (ExecutionException executionException) {
-                        executionException.printStackTrace();
-                    }
-                }
-
-
-
-            }
-        });
-
-        btn1.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent e) {
-                Platform.runLater(new Runnable() {
-                    public void run() {
-                        try {
-                            new Main().start(new Stage());
-                        } catch (FileNotFoundException fileNotFoundException) {
-                            fileNotFoundException.printStackTrace();
-                        } catch (IOException ioException) {
-                            ioException.printStackTrace();
-                        }
-                        primaryStage.close();
-                    }
-                });
-            }
-        });*/
         primaryStage.show();
 
+    }
+    public static String decrypt(String encryptedText, SecretKey secretKey)
+            throws Exception {
+        Base64.Decoder decoder = Base64.getDecoder();
+        byte[] encryptedTextByte = decoder.decode(encryptedText);
+        //System.out.println();
+        cipher.init(Cipher.DECRYPT_MODE, secretKey);
+        byte[] decryptedByte = cipher.doFinal(encryptedTextByte);
+        String decryptedText = new String(decryptedByte);
+        return decryptedText;
     }
 }

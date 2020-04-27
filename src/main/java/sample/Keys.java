@@ -50,6 +50,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import static sample.RSA_key.sign;
+import static sample.RSA_key.verify;
+
 
 /**
  *
@@ -82,7 +85,7 @@ public class Keys extends Application {
     }
 
     @Override
-    public void start(final Stage primaryStage) throws IOException, NoSuchAlgorithmException {
+    public void start(final Stage primaryStage) throws Exception {
         Extras.cur=1;
         InputStream serviceAccount = new FileInputStream(Extras.path);
         GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
@@ -166,6 +169,12 @@ public class Keys extends Application {
         } catch (BadPaddingException e) {
             e.printStackTrace();
         }*/
+
+        /*String signature = sign("foobar", keyPairGenerator.getPrivateKey());
+
+//Let's check the signature
+        boolean isCorrect = verify("foobar", signature, keyPairGenerator.getPublicKey());
+        System.out.println("Signature correct: " + isCorrect);*/
         final Text actiontarget = new Text();
         grid.add(actiontarget, 1, 6);
         btn.setOnAction(new EventHandler<ActionEvent>() {
