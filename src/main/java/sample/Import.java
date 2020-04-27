@@ -46,7 +46,7 @@ public class Import extends Application {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.initOwner(owner);
-        alert.show();
+        alert.showAndWait();
     }
 
     @Override
@@ -115,13 +115,22 @@ public class Import extends Application {
             String al = document.get("send").toString();
             //al=al.substring(1,al.length()-1);
             String arr[] = al.split(",");
+            boolean bi=false;
             for(int idx=0;idx<arr.length;idx++)
             {
+                if(arr[idx].equals(Extras.email))
+                {
+                    bi=true;
+                }
                 users.remove(users.indexOf(arr[idx]));
                 alreadyAdded.add(arr[idx]);
             }
-            alreadyAdded.add(Extras.email);
-            users.remove(users.indexOf(Extras.email));
+            if(bi==false)
+            {
+                alreadyAdded.add(Extras.email);
+                users.remove(users.indexOf(Extras.email));
+            }
+
         }
 
 //        System.out.println(users);
@@ -184,6 +193,9 @@ public class Import extends Application {
                     Map<String, String> docData = new HashMap();
                     docData.put("send", tp);
                     ApiFuture<WriteResult> future1 = db.collection("send_list").document(Extras.email).set(docData);
+                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                            "Success!", "Email added to contact list");
+
                     try {
                         new KeyRing().start(new Stage());
                     } catch (Exception scriptException) {
