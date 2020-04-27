@@ -166,11 +166,17 @@ public class Home extends Application {
         hb_key_pair.getChildren().add(btn_key_pair);
         grid.add(hb_key_pair,4,8,4,2);
 
+        Button btn_keyring=new Button("Key ring");
+        HBox hb_keyring=new HBox(10);
+        hb_keyring.setAlignment(Pos.CENTER);
+        hb_keyring.getChildren().add(btn_keyring);
+        grid.add(hb_keyring,8,8,4,2);
+
         Button btn_logout = new Button("Logout");
         HBox hb_logout = new HBox(10);
         hb_logout.setAlignment(Pos.CENTER);
         hb_logout.getChildren().add(btn_logout);
-        grid.add(hb_logout,8,8,4,2);
+        grid.add(hb_logout,12,8,4,2);
 
         btn_send1.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -219,6 +225,19 @@ public class Home extends Application {
                 try {
                     Extras.email="";
                     new Main().start(new Stage());
+                } catch (Exception scriptException) {
+                    scriptException.printStackTrace();
+                }
+                primaryStage.close();
+            }
+        });
+
+        btn_keyring.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent e) {
+                try {
+                    new KeyRing().start(new Stage());
                 } catch (Exception scriptException) {
                     scriptException.printStackTrace();
                 }
