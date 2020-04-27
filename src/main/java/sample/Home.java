@@ -232,7 +232,7 @@ public class Home extends Application {
             }
         });
 
-        btn_received.setOnAction(new EventHandler<ActionEvent>() {
+        btn_keyring.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent e) {
