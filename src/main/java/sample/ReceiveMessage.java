@@ -9,13 +9,11 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.Firestore;
 
 import java.io.*;
+import java.security.InvalidKeyException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
+import javax.crypto.*;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -250,6 +248,51 @@ public class ReceiveMessage extends Application {
                         exception.printStackTrace();
                     }
                     bodyField.setText(a);
+                }
+                else if(document1.get("algorithm").toString().equals("00"))
+                {
+                    DocumentReference docRef12 = db.collection("asymmetric").document(Extras.email);
+                    ApiFuture<DocumentSnapshot> future12 = docRef12.get();
+                    DocumentSnapshot document12 = null;
+                    try {
+                        document12 = future12.get();
+                    } catch (InterruptedException interruptedException) {
+                        interruptedException.printStackTrace();
+                    } catch (ExecutionException executionException) {
+                        executionException.printStackTrace();
+                    }
+                    if (document12.exists())
+                    {
+                        String decryptedString="";
+                        try {
+                            for(int i=Extras.user_key.length();i<16;i++)
+                            {
+                                Extras.user_key+="0";
+                            }
+                            SecretKey originalKey2 = new SecretKeySpec(Extras.user_key.getBytes(), 0, Extras.user_key.getBytes().length, "AES");
+                            String kas=decrypt(document12.get("encrypted_private_key").toString(),originalKey2);
+                            decryptedString = RSA_key.decrypt(document.get(Mi + "-body").toString(), kas);
+                            System.out.println(decryptedString);
+                        } catch (NoSuchAlgorithmException e) {
+                            System.err.println(e.getMessage());
+                        } catch (NoSuchPaddingException e) {
+                            e.printStackTrace();
+                        } catch (InvalidKeyException e) {
+                            e.printStackTrace();
+                        } catch (IllegalBlockSizeException e) {
+                            e.printStackTrace();
+                        } catch (BadPaddingException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        bodyField.setText(decryptedString);
+                    }
+                    else
+                    {
+
+                    }
+
                 }
                 sf.setText(document1.get("sender").toString());
                 if(document1.get("algorithm").toString().equals("01")) {

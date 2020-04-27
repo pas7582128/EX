@@ -86,10 +86,21 @@ public class RSA_key {
         return privateKey;
     }
 
-    public static byte[] encrypt(String data, String publicKey) throws BadPaddingException, IllegalBlockSizeException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException {
+    public static String encrypt(String data, String publicKey) throws BadPaddingException, IllegalBlockSizeException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException {
         Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         cipher.init(Cipher.ENCRYPT_MODE, getPublicKey(publicKey));
-        return cipher.doFinal(data.getBytes());
+        int m=data.length()/100;
+        if(data.length()%100>0)
+        {
+            m++;
+        }
+        String r="";
+        for(int i=0;i<m-1;i++)
+        {
+            r+=Base64.getEncoder().encodeToString(cipher.doFinal(data.substring(100*i,Math.min(100*(i+1),data.length())).getBytes()))+",";
+        }
+        r+=Base64.getEncoder().encodeToString(cipher.doFinal(data.substring((m-1)*100,Math.min(100*(m),data.length())).getBytes()));
+        return r;
     }
 
     public static String decrypt(byte[] data, PrivateKey privateKey) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
@@ -99,7 +110,34 @@ public class RSA_key {
     }
 
     public static String decrypt(String data, String base64PrivateKey) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
-        return decrypt(Base64.getDecoder().decode(data.getBytes()), getPrivateKey(base64PrivateKey));
+        String [] arr=data.split(",");
+        String r="";
+        for(int i=0;i<arr.length;i++)
+        {
+            r+=decrypt(Base64.getDecoder().decode(arr[i].getBytes()), getPrivateKey(base64PrivateKey));
+        }
+        return r;
+    }
+
+    public static String sign(String plainText, PrivateKey privateKey) throws Exception {
+        Signature privateSignature = Signature.getInstance("SHA256withRSA");
+        privateSignature.initSign(privateKey);
+        privateSignature.update(plainText.getBytes());
+
+        byte[] signature = privateSignature.sign();
+
+        return Base64.getEncoder().encodeToString(signature);
+    }
+
+    public static boolean verify(String plainText, String signature, PublicKey publicKey) throws Exception {
+        Signature publicSignature = Signature.getInstance("SHA256withRSA");
+        publicSignature.initVerify(publicKey);
+        publicSignature.update(plainText.getBytes());
+
+        byte[] signatureBytes = Base64.getDecoder().decode(signature);
+
+
+        return publicSignature.verify(signatureBytes);
     }
 
 }
