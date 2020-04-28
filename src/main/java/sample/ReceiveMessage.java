@@ -414,7 +414,7 @@ public class ReceiveMessage extends Application {
                                     if(isCorrect==true)
                                     {
 
-                                        showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                        showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
                                                 "Success!", "Signature verified successfully");
                                         bodyField.setText(mess);
                                     }
@@ -426,7 +426,7 @@ public class ReceiveMessage extends Application {
                                 }
                                 else
                                 {
-                                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                    showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
                                             "Alert!", "Passphrase for verifying signature changed");
                                     int w=decryptedString.indexOf('@');
                                     int signature_l=Integer.parseInt(decryptedString.substring(0,w));
@@ -450,7 +450,7 @@ public class ReceiveMessage extends Application {
                                         if(isCorrect==true)
                                         {
 
-                                            showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                            showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
                                                     "Success!", "Signature verified successfully");
                                             bodyField.setText(mess);
                                         }
@@ -534,7 +534,7 @@ public class ReceiveMessage extends Application {
                                     if(isCorrect==true)
                                     {
 
-                                        showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                        showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
                                                 "Success!", "Signature verified successfully");
                                         bodyField.setText(mess);
                                     }
@@ -546,7 +546,7 @@ public class ReceiveMessage extends Application {
                                 }
                                 else
                                 {
-                                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                    showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
                                             "Alert!", "Passphrase for verifying signature changed");
                                     int w=decryptedString.indexOf('@');
                                     int signature_l=Integer.parseInt(decryptedString.substring(0,w));
@@ -570,7 +570,7 @@ public class ReceiveMessage extends Application {
                                         if(isCorrect==true)
                                         {
 
-                                            showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                            showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
                                                     "Success!", "Signature verified successfully");
                                             bodyField.setText(mess);
                                         }
@@ -634,7 +634,7 @@ public class ReceiveMessage extends Application {
                         File file = fil_chooser.showSaveDialog(primaryStage);
 
                         if (file != null) {
-                            showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                            showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
                                     "Alert!", file.getAbsolutePath()
                                             + "  selected");
 
@@ -650,7 +650,7 @@ public class ReceiveMessage extends Application {
                                 myWriter.write(write);
                                 myWriter.close();
 
-                                showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
                                         "Success!", "Successfully written to file "+file.getAbsolutePath());
                             } catch (IOException ef) {
                                 System.out.println("An error occurred.");

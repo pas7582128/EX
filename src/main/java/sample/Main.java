@@ -89,15 +89,13 @@ public class Main extends Application {
         grid.setVgap(30);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-
-
         Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
         double width=  visualBounds.getWidth()/2;
         Scene scene = new Scene(grid, visualBounds.getWidth(), visualBounds.getHeight());
         primaryStage.setScene(scene);
         grid.setAlignment(Pos.TOP_CENTER);
         Text scenetitle = new Text("Login Page");
-        scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 28));
         grid.add(scenetitle, 2, 1);
 
         Label userName = new Label("Email ID");
@@ -169,8 +167,8 @@ public class Main extends Application {
                     String pass= (String) document.get("password");
                     if(pass.equals(MD5.getMd5(pwBox.getText().trim())))
                     {
-                        showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                "Alert!", "Successful login");
+                        showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
+                                "Success!", "Successful login");
                         try {
                             Extras.email=userTextField.getText().trim();
                             DocumentReference docRef1 = db.collection("verify_email").document(Extras.email);

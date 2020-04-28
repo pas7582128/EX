@@ -77,13 +77,13 @@ public class Revoke extends Application {
         HBox hb_rev_msg = new HBox(10);
         hb_rev_msg.setAlignment(Pos.CENTER);
         hb_rev_msg.getChildren().add(btn_rev_msg);
-        grid.add(hb_rev_msg,0,4,4,2);
+        grid.add(hb_rev_msg,4,4,4,2);
 
         Button btn_rev_sign = new Button("Revoke Signature key");
         HBox hb_rev_sign = new HBox(10);
         hb_rev_sign.setAlignment(Pos.CENTER);
         hb_rev_sign.getChildren().add(btn_rev_sign);
-        grid.add(hb_rev_sign,4,4,4,2);
+        grid.add(hb_rev_sign,4,8,4,2);
 
         Image viewSent_image = new Image(new FileInputStream("res/home.png"));
 
