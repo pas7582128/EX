@@ -63,7 +63,7 @@ public class RevokeMessageKey extends Application {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.initOwner(owner);
-        alert.show();
+        alert.showAndWait();
     }
 
 
@@ -135,7 +135,7 @@ public class RevokeMessageKey extends Application {
         Label label = new Label("New Passphrase : ");
         grid.add(label, 0, 4);
 
-        final TextField tf_passphrase = new TextField();
+        final PasswordField tf_passphrase = new PasswordField();
         grid.add(tf_passphrase, 4, 4,5,1);
 
         Button btn_submit = new Button("Submit");
@@ -201,8 +201,8 @@ public class RevokeMessageKey extends Application {
                     document_key_cnt = future_key_cnt.get();
                     document_revoked = future_revoked.get();
 
-                    System.out.println(document_asymm);
-                    System.out.println(docRef_key_cnt);
+                    //System.out.println(document_asymm);
+                    //System.out.println(docRef_key_cnt);
 
                 } catch (InterruptedException interruptedException) {
                     interruptedException.printStackTrace();
@@ -295,12 +295,12 @@ public class RevokeMessageKey extends Application {
 
 
                     //debug
-                    System.out.println("old private : " + pr_key);
-                    System.out.println("encrypted_private_key : "+new_enc_pr_key);
-                    System.out.println("id : "+new_id);
-                    System.out.println("passphrase : "+new_passph);
-                    System.out.println("private_key :" +new_pr_key);
-                    System.out.println("public_key :"+new_pub_key);
+                    //System.out.println("old private : " + pr_key);
+                    //System.out.println("encrypted_private_key : "+new_enc_pr_key);
+                    //System.out.println("id : "+new_id);
+                    //System.out.println("passphrase : "+new_passph);
+                    //System.out.println("private_key :" +new_pr_key);
+                    //System.out.println("public_key :"+new_pub_key);
 
                     try {
                         WriteResult result = future_key_cnt_u.get();  //I think it is not needed

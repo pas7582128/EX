@@ -302,25 +302,10 @@ public class Receiver extends Application {
                            }
                            else if(document1[finalJ].get("algorithm").toString().equals("00")||document1[finalJ].get("algorithm").toString().equals("10"))
                            {
-                               TextInputDialog td = new TextInputDialog("Enter Passphrase");
-                               td.setHeaderText("Enter passphrase for decryption");
-                               PasswordField pwd = new PasswordField();
-                               HBox content = new HBox();
-                               content.setAlignment(Pos.CENTER_LEFT);
-                               content.setSpacing(10);
-                               content.getChildren().addAll(new Label("Password"), pwd);
-                               td.getDialogPane().setContent(content);
-                               td.showAndWait();
 
-                               if(pwd.getText().trim().length()==0)
-                               {
-                                   showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                           "Error!", "Enter passphrase");
-                                   return;
-                               }
-                               else
-                               {
+
                                    String asy=finalDocument.get(arr[co- finalI -1]+"-id").toString();
+
                                    DocumentReference docRef11 = db.collection("asymmetric").document(Extras.email);
                                    ApiFuture<DocumentSnapshot> future11 = docRef11.get();
                                    DocumentSnapshot document11 = null;
@@ -333,29 +318,65 @@ public class Receiver extends Application {
                                    }
                                    if (document11.exists())
                                    {
-                                       if(MD5.getMd5(pwd.getText().trim()).equals(document11.get("passphrase").toString()))
+                                       if(document11.get("id").toString().equals(asy))
                                        {
-                                           Extras.curm=co- finalI1 -1;
-                                           Extras.user_key=pwd.getText().trim();
-                                           try {
-                                               new ReceiveMessage().start(new Stage());
-                                           } catch (Exception scriptException) {
-                                               scriptException.printStackTrace();
+                                           TextInputDialog td = new TextInputDialog("Enter Passphrase");
+                                           td.setHeaderText("Enter passphrase for decryption");
+                                           PasswordField pwd = new PasswordField();
+                                           HBox content = new HBox();
+                                           content.setAlignment(Pos.CENTER_LEFT);
+                                           content.setSpacing(10);
+                                           content.getChildren().addAll(new Label("Password"), pwd);
+                                           td.getDialogPane().setContent(content);
+                                           td.showAndWait();
+
+                                           if(pwd.getText().trim().length()==0)
+                                           {
+                                               showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                                       "Error!", "Enter passphrase");
+                                               return;
                                            }
-                                           primaryStage.close();
+                                           if(MD5.getMd5(pwd.getText().trim()).equals(document11.get("passphrase").toString()))
+                                           {
+                                               Extras.curm=co- finalI1 -1;
+                                               Extras.user_key=pwd.getText().trim();
+                                               try {
+                                                   new ReceiveMessage().start(new Stage());
+                                               } catch (Exception scriptException) {
+                                                   scriptException.printStackTrace();
+                                               }
+                                               primaryStage.close();
+                                           }
+                                           else
+                                           {
+                                               showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                                       "Error!", "Passphrase not valid");
+                                               return;
+                                           }
                                        }
                                        else
                                        {
-                                           showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                                   "Error!", "Passphrase not valid");
-                                           return;
+
+
+                                               Extras.curm=co- finalI1 -1;
+                                               showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                                       "Alert!", "Passphrase for decryption changed");
+                                               try {
+                                                   new ReceiveMessage().start(new Stage());
+                                               } catch (Exception scriptException) {
+                                                   scriptException.printStackTrace();
+                                               }
+                                               primaryStage.close();
+
+
                                        }
+
                                    }
                                    else
                                    {
 
                                    }
-                               }
+
                            }
 
                        }
