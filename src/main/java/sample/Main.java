@@ -170,7 +170,7 @@ public class Main extends Application {
                     if(pass.equals(MD5.getMd5(pwBox.getText().trim())))
                     {
                         showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                "Error!", "Successful login");
+                                "Alert!", "Successful login");
                         try {
                             Extras.email=userTextField.getText().trim();
                             DocumentReference docRef1 = db.collection("verify_email").document(Extras.email);

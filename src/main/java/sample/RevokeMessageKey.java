@@ -63,7 +63,7 @@ public class RevokeMessageKey extends Application {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.initOwner(owner);
-        alert.show();
+        alert.showAndWait();
     }
 
 
@@ -135,7 +135,7 @@ public class RevokeMessageKey extends Application {
         Label label = new Label("New Passphrase : ");
         grid.add(label, 0, 4);
 
-        final TextField tf_passphrase = new TextField();
+        final PasswordField tf_passphrase = new PasswordField();
         grid.add(tf_passphrase, 4, 4,5,1);
 
         Button btn_submit = new Button("Submit");

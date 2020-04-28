@@ -96,7 +96,7 @@ public class ReceiveMessage extends Application {
     }
 
     @Override
-    public void start(final Stage primaryStage) throws IOException {
+    public void start(final Stage primaryStage) throws IOException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException {
         Extras.cur=1;
 
         InputStream serviceAccount = new FileInputStream(Extras.path);
@@ -266,30 +266,67 @@ public class ReceiveMessage extends Application {
                     }
                     if (document12.exists())
                     {
-                        String decryptedString="";
-                        try {
-                            for(int i=Extras.user_key.length();i<16;i++)
-                            {
-                                Extras.user_key+="0";
+                        if(document.get(Mi+"-id").toString().equals(document12.get("id").toString()))
+                        {
+                            String decryptedString="";
+                            try {
+                                for(int i=Extras.user_key.length();i<16;i++)
+                                {
+                                    Extras.user_key+="0";
+                                }
+                                SecretKey originalKey2 = new SecretKeySpec(Extras.user_key.getBytes(), 0, Extras.user_key.getBytes().length, "AES");
+                                String kas=decrypt(document12.get("encrypted_private_key").toString(),originalKey2);
+                                decryptedString = RSA_key.decrypt(document.get(Mi + "-body").toString(), kas);
+                                //System.out.println(decryptedString);
+                            } catch (NoSuchAlgorithmException e) {
+                                System.err.println(e.getMessage());
+                            } catch (NoSuchPaddingException e) {
+                                e.printStackTrace();
+                            } catch (InvalidKeyException e) {
+                                e.printStackTrace();
+                            } catch (IllegalBlockSizeException e) {
+                                e.printStackTrace();
+                            } catch (BadPaddingException e) {
+                                e.printStackTrace();
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                            SecretKey originalKey2 = new SecretKeySpec(Extras.user_key.getBytes(), 0, Extras.user_key.getBytes().length, "AES");
-                            String kas=decrypt(document12.get("encrypted_private_key").toString(),originalKey2);
-                            decryptedString = RSA_key.decrypt(document.get(Mi + "-body").toString(), kas);
-                            System.out.println(decryptedString);
-                        } catch (NoSuchAlgorithmException e) {
-                            System.err.println(e.getMessage());
-                        } catch (NoSuchPaddingException e) {
-                            e.printStackTrace();
-                        } catch (InvalidKeyException e) {
-                            e.printStackTrace();
-                        } catch (IllegalBlockSizeException e) {
-                            e.printStackTrace();
-                        } catch (BadPaddingException e) {
-                            e.printStackTrace();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            bodyField.setText(decryptedString);
                         }
-                        bodyField.setText(decryptedString);
+                        else
+                        {
+                            try {
+                                cipher = Cipher.getInstance("AES");
+                            } catch (NoSuchAlgorithmException noSuchAlgorithmException) {
+                                noSuchAlgorithmException.printStackTrace();
+                            } catch (NoSuchPaddingException noSuchPaddingException) {
+                                noSuchPaddingException.printStackTrace();
+                            }
+                            DocumentReference docRef31 = db.collection("revoked_asymmetric").document(Extras.email);
+                            ApiFuture<DocumentSnapshot> future31 = docRef31.get();
+                            DocumentSnapshot document31 = null;
+                            try {
+                                document31 = future31.get();
+                            } catch (InterruptedException interruptedException) {
+                                interruptedException.printStackTrace();
+                            } catch (ExecutionException executionException) {
+                                executionException.printStackTrace();
+                            }
+                            if (document31.exists())
+                            {
+                                String ab=document31.get(document.get(Mi+"-id").toString()+"_private").toString();
+                                String abcd="";
+                                SecretKey originalKey2 = new SecretKeySpec(Extras.AES_KEY.getBytes(), 0, Extras.AES_KEY.getBytes().length, "AES");
+                                try {
+                                    abcd=decrypt(ab, originalKey2);
+                                } catch (Exception exception) {
+                                    exception.printStackTrace();
+                                }
+                                String decryptedString = RSA_key.decrypt(document.get(Mi + "-body").toString(), abcd);
+                                bodyField.setText(decryptedString);
+                            }
+                        }
+
                     }
                     else
                     {
