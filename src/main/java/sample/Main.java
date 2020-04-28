@@ -59,7 +59,7 @@ public class Main extends Application {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.initOwner(owner);
-        alert.show();
+        alert.showAndWait();
     }
 
     @Override
@@ -124,6 +124,12 @@ public class Main extends Application {
         hbBtn1.getChildren().add(btn1);
         grid.add(hbBtn1, 2, 8);
 
+        Button btn2 = new Button("Forgot Password");
+        HBox hbBtn2 = new HBox(10);
+        hbBtn2.setAlignment(Pos.BOTTOM_RIGHT);
+        hbBtn2.getChildren().add(btn2);
+        grid.add(hbBtn2, 2, 9);
+
         final Text actiontarget = new Text();
         grid.add(actiontarget, 1, 6);
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -167,7 +173,7 @@ public class Main extends Application {
                                 "Error!", "Successful login");
                         try {
                             Extras.email=userTextField.getText().trim();
-                            DocumentReference docRef1 = db.collection("sign").document(Extras.email);
+                            DocumentReference docRef1 = db.collection("verify_email").document(Extras.email);
                             ApiFuture<DocumentSnapshot> future1 = docRef1.get();
                             DocumentSnapshot document1 = null;
                             try {
@@ -178,12 +184,37 @@ public class Main extends Application {
                                 executionException.printStackTrace();
                             }
                             if (document1.exists()) {
-                                new Home().start(new Stage());
+                                if(!document1.get("OTP").toString().equals("0"))
+                                {
+                                    new Email_OTP().start(new Stage());
+                                }
+                                else
+                                {
+                                    DocumentReference docRef2 = db.collection("sign").document(Extras.email);
+                                    ApiFuture<DocumentSnapshot> future2 = docRef2.get();
+                                    DocumentSnapshot document2 = null;
+                                    try {
+                                        document2 = future2.get();
+                                    } catch (InterruptedException interruptedException) {
+                                        interruptedException.printStackTrace();
+                                    } catch (ExecutionException executionException) {
+                                        executionException.printStackTrace();
+                                    }
+                                    if (document2.exists())
+                                    {
+                                        new Home().start(new Stage());
+                                    }
+                                    else
+                                    {
+                                        new Keys().start(new Stage());
+                                    }
+                                }
+
 
                             }
                             else
                             {
-                                new Keys().start(new Stage());
+
                             }
 
                         } catch (Exception scriptException) {
@@ -207,6 +238,19 @@ public class Main extends Application {
             public void handle(ActionEvent e) {
                 try {
                     new SignUp().start(new Stage());
+                } catch (Exception scriptException) {
+                    scriptException.printStackTrace();
+                }
+                primaryStage.close();
+            }
+        });
+
+        btn2.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent e) {
+                try {
+                    new fp_email().start(new Stage());
                 } catch (Exception scriptException) {
                     scriptException.printStackTrace();
                 }

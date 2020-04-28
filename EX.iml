@@ -9,7 +9,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="10" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: com.google.firebase:firebase-admin:6.12.2" level="project" />
     <orderEntry type="library" name="Maven: com.google.api-client:google-api-client:1.30.1" level="project" />
@@ -79,5 +79,9 @@
     <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.34.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.34.Final" level="project" />
     <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="activation" level="project" />
+    <orderEntry type="library" name="mail" level="project" />
+    <orderEntry type="library" name="smtp-1.4.5" level="project" />
+    <orderEntry type="library" name="lib1" level="project" />
   </component>
 </module>

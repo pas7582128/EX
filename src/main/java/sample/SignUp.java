@@ -47,6 +47,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
+import javax.mail.MessagingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -58,6 +59,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -222,6 +224,20 @@ public class SignUp extends Application {
                             "Error!", "Email id already exists");
                     return;
                 } else {
+                    String id="";
+                    try {
+
+                        //System.out.println(userTextField.getText().toString());
+                        Random random=new Random();
+                        id = String.format("%04d", random.nextInt(10000));
+                        Send_OTP.sendPlainTextEmail("nsssvnit2020@gmail.com","Nss@svnit@2020",userTextField.getText().trim(),"Verify email From Secure Message Transfer","Your OTP is "+id);
+                    } catch (MessagingException messagingException) {
+                        showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                "Error!", "Email id not valid");
+                        return;
+                    }
+                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                            "Alert!", "OTP sent to your email id");
                     Map<String, Object> docData = new HashMap();
                     docData.put("name", nameField.getText().trim());
                     docData.put("email_id", userTextField.getText().trim());
@@ -239,10 +255,17 @@ public class SignUp extends Application {
                         executionException.printStackTrace();
                     }
 
+                    Map<String, Object> docData1 = new HashMap();
+                    docData1.put("OTP", MD5.getMd5(id));
+
+
+// Add a new document (asynchronously) in collection "cities" with id "LA"
+                    ApiFuture<WriteResult> future2 = db.collection("verify_email").document(userTextField.getText().trim()).set(docData1);
+
                     try {
 
                         Extras.email=userTextField.getText().trim();
-                        new Keys().start(new Stage());
+                        new Email_OTP().start(new Stage());
                     } catch (Exception scriptException) {
                         scriptException.printStackTrace();
                     }
