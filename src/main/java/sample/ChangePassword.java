@@ -250,8 +250,8 @@ public class ChangePassword extends Application {
                             docData.put("date_list", Arrays.toString(da));
                             ApiFuture<WriteResult> future1 = db.collection("change_password").document(Extras.email).set(docData);
                         }
-                        showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                "Alert!", "Password changed successfully");
+                        showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
+                                "Success!", "Password changed successfully");
                         return;
                     }
                     else

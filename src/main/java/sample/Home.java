@@ -70,8 +70,8 @@ public class Home extends Application {
 
 
         Text scenetitle = new Text("Home");
-        scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-        grid.add(scenetitle, 6, 0);
+        scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 28));
+        grid.add(scenetitle, 6, 1);
 
         Image sendText_image = new Image(new FileInputStream("res/send_text.png"));
 

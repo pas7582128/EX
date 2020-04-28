@@ -674,7 +674,7 @@ public class Email_File extends Application {
                                 {
 
                                 }
-                                showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
                                         "Success", "Message sent Successfully");
                             }
                             else
@@ -941,7 +941,7 @@ public class Email_File extends Application {
                                 {
 
                                 }
-                                showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
                                         "Success", "Message sent Successfully");
                             }
                         }
@@ -1244,7 +1244,7 @@ public class Email_File extends Application {
                                             {
 
                                             }
-                                            showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                            showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
                                                     "Success", "Message sent Successfully");
                                         }
                                         else
@@ -1512,7 +1512,7 @@ public class Email_File extends Application {
                                             {
 
                                             }
-                                            showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                            showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
                                                     "Success", "Message sent Successfully");
                                         }
 

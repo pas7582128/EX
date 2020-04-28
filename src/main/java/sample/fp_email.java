@@ -195,8 +195,8 @@ public class fp_email extends Application {
                         {
                             DocumentReference docRef = db.collection("login_credentials").document(userTextField.getText().trim());
                             ApiFuture<WriteResult>future2 = docRef.update("password", MD5.getMd5(pwBox1.getText().trim()));
-                            showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                    "Alert!", "Password Changed Successfully");
+                            showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
+                                    "Success!", "Password Changed Successfully");
                             try {
                                 new Main().start(new Stage());
                             } catch (Exception scriptException) {
@@ -221,8 +221,8 @@ public class fp_email extends Application {
                         if (document.exists()) {
                             if(MD5.getMd5(pwBox.getText().trim()).equals(document.get("otp").toString()))
                             {
-                                showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                        "Alert!", "OTP verified successfully");
+                                showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
+                                        "Success!", "OTP verified successfully");
                                 pw.setText("verified");
                                 pw.setVisible(false);
                                 pwBox.setVisible(false);
@@ -277,8 +277,8 @@ public class fp_email extends Application {
                         } catch (MessagingException messagingException) {
                             messagingException.printStackTrace();
                         }
-                        showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                "Alert!", "An OTP has been sent to your email id");
+                        showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
+                                "Information", "An OTP has been sent to your email id");
                         userName.setText("verified");
                         return;
                     }
@@ -303,8 +303,8 @@ public class fp_email extends Application {
                 } catch (MessagingException messagingException) {
                     messagingException.printStackTrace();
                 }
-                showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                        "Alert!", "OTP has been resent to your email id");
+                showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
+                        "Information", "OTP has been resent to your email id");
                 return;
 
             }

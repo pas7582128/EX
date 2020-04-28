@@ -254,7 +254,7 @@ public class SignUp extends Application {
                         executionException.printStackTrace();
                     }
 
-                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                    showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
                             "Alert!", "OTP sent to your email id");
 
                     Map<String, Object> docData1 = new HashMap();

@@ -374,7 +374,7 @@ public class Receiver extends Application {
 
 
                                                Extras.curm=co- finalI1 -1;
-                                               showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                               showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
                                                        "Alert!", "Passphrase for decryption changed");
                                                try {
                                                    new ReceiveMessage().start(new Stage());

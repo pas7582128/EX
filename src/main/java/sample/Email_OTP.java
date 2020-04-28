@@ -144,8 +144,8 @@ public class Email_OTP extends Application {
                 if (document.exists()) {
                     if(MD5.getMd5(pwBox.getText().trim()).equals(document.get("OTP").toString()))
                     {
-                        showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                "Alert!", "OTP verified successfully");
+                        showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
+                                "Success!", "OTP verified successfully");
                         docRef = db.collection("verify_email").document(Extras.email);
                         ApiFuture<WriteResult>future2 = docRef.update("OTP", "0");
                         try {

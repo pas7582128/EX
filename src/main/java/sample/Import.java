@@ -190,7 +190,7 @@ public class Import extends Application {
                     Map<String, String> docData = new HashMap();
                     docData.put("send", tp);
                     ApiFuture<WriteResult> future1 = db.collection("send_list").document(Extras.email).set(docData);
-                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                    showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
                             "Success!", "Email added to contact list");
 
                     try {
