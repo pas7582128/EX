@@ -18,6 +18,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
@@ -81,11 +83,24 @@ public class KeyRing extends Application {
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(scenetitle, 2, Extras.y+1);
 
-        Button btn6= new Button("Home");
-        HBox hbBtn6 = new HBox(10);
-        hbBtn6.setAlignment(Pos.BOTTOM_RIGHT);
-        hbBtn6.getChildren().add(btn6);
-        grid.add(hbBtn6, 5, Extras.y+1);
+
+        Image viewSent_image = new Image(new FileInputStream("res/home.png"));
+
+        //Setting the image view q
+        ImageView viewSent_imageView = new ImageView(viewSent_image);
+
+        //Setting the position of the image
+        viewSent_imageView.setX(50);
+        viewSent_imageView.setY(25);
+        viewSent_imageView.setFitHeight(50);
+        viewSent_imageView.setFitWidth(50);
+
+        Button btn_home = new Button("Home");
+        HBox hb_view_sent = new HBox(10);
+        hb_view_sent.setAlignment(Pos.TOP_CENTER);
+        hb_view_sent.getChildren().add(btn_home);
+        grid.add(hb_view_sent, 10, 0);
+        btn_home.setGraphic(viewSent_imageView);
 
         ArrayList<String> users= new ArrayList<String>();
         DocumentReference docRef = db.collection("send_list").document(Extras.email);
@@ -189,7 +204,7 @@ public class KeyRing extends Application {
 
 
 
-        btn6.setOnAction(new EventHandler<ActionEvent>() {
+        btn_home.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent e) {

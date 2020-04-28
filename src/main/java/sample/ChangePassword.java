@@ -36,6 +36,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Reflection;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -134,6 +136,25 @@ public class ChangePassword extends Application {
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
         hbBtn.getChildren().add(btn);
         grid.add(hbBtn, 1, Extras.y+4);
+
+
+        Image viewSent_image = new Image(new FileInputStream("res/home.png"));
+
+        //Setting the image view q
+        ImageView viewSent_imageView = new ImageView(viewSent_image);
+
+        //Setting the position of the image
+        viewSent_imageView.setX(50);
+        viewSent_imageView.setY(25);
+        viewSent_imageView.setFitHeight(50);
+        viewSent_imageView.setFitWidth(50);
+
+        Button btn_home = new Button("Home");
+        HBox hb_view_sent = new HBox(10);
+        hb_view_sent.setAlignment(Pos.TOP_CENTER);
+        hb_view_sent.getChildren().add(btn_home);
+        grid.add(hb_view_sent, 10, 0);
+        btn_home.setGraphic(viewSent_imageView);
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -251,13 +272,8 @@ public class ChangePassword extends Application {
             }
         });
 
-        Button btn6= new Button("Home");
-        HBox hbBtn6 = new HBox(10);
-        hbBtn6.setAlignment(Pos.BOTTOM_RIGHT);
-        hbBtn.getChildren().add(btn6);
-        grid.add(hbBtn6, 2, Extras.y+4);
 
-        btn6.setOnAction(new EventHandler<ActionEvent>() {
+        btn_home.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent e) {

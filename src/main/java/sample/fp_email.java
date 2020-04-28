@@ -133,6 +133,32 @@ public class fp_email extends Application {
         hbBtn.getChildren().add(btn);
         grid.add(hbBtn, 1, 5);
 
+        Button btn2 = new Button("Resend OTP");
+        HBox hbBtn2 = new HBox(10);
+        hbBtn2.setAlignment(Pos.BOTTOM_RIGHT);
+        hbBtn2.getChildren().add(btn2);
+        grid.add(hbBtn2, 1, 5);
+        btn2.setVisible(false);
+
+        Button btn3 = new Button("Go To Login Page");
+        HBox hbBtn3 = new HBox(10);
+        hbBtn3.setAlignment(Pos.BOTTOM_RIGHT);
+        hbBtn3.getChildren().add(btn3);
+        grid.add(hbBtn3, 1, 6);
+
+        btn3.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent e) {
+                try {
+                    new Main().start(new Stage());
+                } catch (Exception scriptException) {
+                    scriptException.printStackTrace();
+                }
+                primaryStage.close();
+            }
+        });
+
         final Text actiontarget = new Text();
         grid.add(actiontarget, 1, 6);
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -202,6 +228,7 @@ public class fp_email extends Application {
                                 pwBox.setVisible(false);
                                 pw1.setVisible(true);
                                 pwBox1.setVisible(true);
+                                btn2.setVisible(false);
                                 return;
                             }
                             else
@@ -241,7 +268,7 @@ public class fp_email extends Application {
                         ApiFuture<WriteResult> future1 = db.collection("forgot_password").document(userTextField.getText().trim()).set(docData);
                         pw.setVisible(true);
                         pwBox.setVisible(true);
-
+                        btn2.setVisible(true);
                         userTextField.setVisible(false);
                         userName.setVisible(false);
                         try {
@@ -256,6 +283,29 @@ public class fp_email extends Application {
                         return;
                     }
                 }
+
+            }
+        });
+
+        btn2.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent e) {
+                Random random=new Random();
+                String id = String.format("%04d", random.nextInt(10000));
+                Map<String, Object> docData = new HashMap();
+                docData.put("otp", MD5.getMd5(id));
+                ApiFuture<WriteResult> future1 = db.collection("forgot_password").document(userTextField.getText().trim()).set(docData);
+
+                try {
+                    //System.out.println(userTextField.getText().toString());
+                    Send_OTP.sendPlainTextEmail("nsssvnit2020@gmail.com","Nss@svnit@2020",userTextField.getText().trim(),"Forgot Password From Secure Message Transfer","Your OTP is "+id);
+                } catch (MessagingException messagingException) {
+                    messagingException.printStackTrace();
+                }
+                showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                        "Alert!", "OTP has been resent to your email id");
+                return;
 
             }
         });
