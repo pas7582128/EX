@@ -467,7 +467,13 @@ public class Email_File extends Application {
                                     content.setSpacing(10);
                                     content.getChildren().addAll(new Label("Password"), pwd);
                                     td.getDialogPane().setContent(content);
-                                    td.showAndWait();
+                                    Optional<String> result=td.showAndWait();
+                                    if(!result.isPresent())
+                                    {
+                                        showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                                "Error!", "Message not sent");
+                                        return;
+                                    }
 
                                     if(pwd.getText().trim().length()==0)
                                     {
@@ -1035,7 +1041,13 @@ public class Email_File extends Application {
                                                 content.setSpacing(10);
                                                 content.getChildren().addAll(new Label("Password"), pwd);
                                                 td.getDialogPane().setContent(content);
-                                                td.showAndWait();
+                                                Optional<String> result=td.showAndWait();
+                                                if(!result.isPresent())
+                                                {
+                                                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                                                            "Error!", "Message not sent");
+                                                    return;
+                                                }
 
                                                 if(pwd.getText().trim().length()==0)
                                                 {

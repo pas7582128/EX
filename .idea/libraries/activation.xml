@@ -1,7 +1,9 @@
 <component name="libraryTable">
   <library name="activation">
     <CLASSES>
-      <root url="jar://$USER_HOME$/IdeaProjects/jar files/activation.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../activation.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../mail.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../smtp-1.4.5.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

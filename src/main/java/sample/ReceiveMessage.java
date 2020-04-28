@@ -339,7 +339,7 @@ public class ReceiveMessage extends Application {
                 }
                 else if(document1.get("algorithm").toString().equals("10"))
                 {
-
+                    //System.out.println("dwwqefwe");
                     DocumentReference docRef12 = db.collection("asymmetric").document(Extras.email);
                     ApiFuture<DocumentSnapshot> future12 = docRef12.get();
                     DocumentSnapshot document12 = null;
@@ -353,7 +353,7 @@ public class ReceiveMessage extends Application {
                     if (document12.exists())
                     {
                         String decryptedString="",kas="";
-                        if(document.get(Mi+"-sid").toString().equals(document12.get("id").toString()))
+                        if(document.get(Mi+"-id").toString().equals(document12.get("id").toString()))
                         {
                             for(int i=Extras.user_key.length();i<16;i++)
                             {
@@ -361,6 +361,7 @@ public class ReceiveMessage extends Application {
                             }
                             SecretKey originalKey2 = new SecretKeySpec(Extras.user_key.getBytes(), 0, Extras.user_key.getBytes().length, "AES");
                             kas=decrypt(document12.get("encrypted_private_key").toString(),originalKey2);
+                            //System.out.println(kas);
                         }
                         else
                         {
@@ -388,6 +389,7 @@ public class ReceiveMessage extends Application {
 
 
                             decryptedString = RSA_key.decrypt(document.get(Mi + "-body").toString(), kas);
+                            //System.out.println(decryptedString);
 
                             String sk=document.get(Mi+"-sid").toString();
                             DocumentReference docRef92 = db.collection("sign").document(document1.get("sender").toString());
@@ -400,6 +402,7 @@ public class ReceiveMessage extends Application {
                             } catch (ExecutionException executionException) {
                                 executionException.printStackTrace();
                             }
+
                             if (document92.exists())
                             {
                                 if(document92.get("id").toString().equals(sk))
