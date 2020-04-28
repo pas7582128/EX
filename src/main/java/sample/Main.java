@@ -184,7 +184,7 @@ public class Main extends Application {
                                 executionException.printStackTrace();
                             }
                             if (document1.exists()) {
-                                if(document1.get("otp").toString().equals("0"))
+                                if(!document1.get("OTP").toString().equals("0"))
                                 {
                                     new Email_OTP().start(new Stage());
                                 }
