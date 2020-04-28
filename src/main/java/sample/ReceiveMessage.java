@@ -45,6 +45,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Reflection;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -56,6 +58,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import javax.crypto.spec.SecretKeySpec;
+import javax.script.ScriptException;
 import javax.swing.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -667,6 +670,45 @@ public class ReceiveMessage extends Application {
             }
 
         }
+
+        Image viewSent_image = new Image(new FileInputStream("res/home.png"));
+
+        //Setting the image view q
+        ImageView viewSent_imageView = new ImageView(viewSent_image);
+
+        //Setting the position of the image
+        viewSent_imageView.setX(50);
+        viewSent_imageView.setY(25);
+        viewSent_imageView.setFitHeight(50);
+        viewSent_imageView.setFitWidth(50);
+
+        Button btn_home = new Button("Home");
+        HBox hb_view_sent = new HBox(10);
+        hb_view_sent.setAlignment(Pos.TOP_CENTER);
+        hb_view_sent.getChildren().add(btn_home);
+        grid.add(hb_view_sent, 10, 0);
+        btn_home.setGraphic(viewSent_imageView);
+
+        btn_home.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent e) {
+                Platform.runLater(new Runnable() {
+                    public void run() {
+                        try {
+                            new Home().start(new Stage());
+                        } catch (FileNotFoundException fileNotFoundException) {
+                            fileNotFoundException.printStackTrace();
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                        } catch (ScriptException scriptException) {
+                            scriptException.printStackTrace();
+                        }
+                        primaryStage.close();
+                    }
+                });
+            }
+        });
 
         primaryStage.show();
 

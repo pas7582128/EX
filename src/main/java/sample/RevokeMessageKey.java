@@ -17,6 +17,8 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
@@ -136,20 +138,38 @@ public class RevokeMessageKey extends Application {
         grid.add(label, 0, 4);
 
         final PasswordField tf_passphrase = new PasswordField();
-        grid.add(tf_passphrase, 4, 4,5,1);
+        grid.add(tf_passphrase, 1, 4,5,1);
 
         Button btn_submit = new Button("Submit");
         HBox hb_submit = new HBox(10);
         hb_submit.setAlignment(Pos.CENTER);
         hb_submit.getChildren().add(btn_submit);
-        grid.add(hb_submit, 2, 8);
+        grid.add(hb_submit, 2, 6);
+
+        Image viewSent_image = new Image(new FileInputStream("res/home.png"));
+
+        //Setting the image view q
+        ImageView viewSent_imageView = new ImageView(viewSent_image);
+
+        //Setting the position of the image
+        viewSent_imageView.setX(50);
+        viewSent_imageView.setY(25);
+        viewSent_imageView.setFitHeight(50);
+        viewSent_imageView.setFitWidth(50);
 
         Button btn_home = new Button("Home");
+        HBox hb_view_sent = new HBox(10);
+        hb_view_sent.setAlignment(Pos.TOP_CENTER);
+        hb_view_sent.getChildren().add(btn_home);
+        grid.add(hb_view_sent, 10, 0);
+        btn_home.setGraphic(viewSent_imageView);
+
+        /*Button btn_home = new Button("Home");
         HBox hb_home = new HBox(10);
         hb_home.setAlignment(Pos.CENTER);
         hb_home.getChildren().add(btn_home);
         grid.add(hb_home, 2, 12);
-
+*/
 
         btn_submit.setOnAction(new EventHandler<ActionEvent>() {
 
