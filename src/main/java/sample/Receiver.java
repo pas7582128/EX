@@ -188,11 +188,11 @@ public class Receiver extends Application {
         }
         if (document.exists())
         {
-           Label[] s=new Label[10];
-           Label[] e=new Label[10];
-           Label[] d=new Label[10];
-           Button [] p=new Button[10];
-           TextArea[] su=new TextArea[10];
+           Label[] s=new Label[Extras.page];
+           Label[] e=new Label[Extras.page];
+           Label[] d=new Label[Extras.page];
+           Button [] p=new Button[Extras.page];
+           TextArea[] su=new TextArea[Extras.page];
            Button prev= new Button("Previous Page");
            Button next= new Button("Next Page");
            Label curp=new Label("Current Page - "+Extras.cur );
@@ -200,8 +200,8 @@ public class Receiver extends Application {
            String re=document.get("receive").toString();
            String[] arr=re.split(",");
            co=arr.length;
-           int max=co/10;
-           if(co%10>0)
+           int max=co/Extras.page;
+           if(co%Extras.page>0)
            {
                max++;
            }
@@ -219,12 +219,12 @@ public class Receiver extends Application {
             grid.add(ini[4], 4, Extras.y+2);
             j=0;
 
-            DocumentReference[] docRef1=new DocumentReference[10];
-            ApiFuture<DocumentSnapshot>[] future1=new ApiFuture[10];
-            DocumentSnapshot[] document1=new DocumentSnapshot[10];
-           for(i=(Extras.cur-1)*10;i<=Math.min(Extras.cur*10-1,co-1);i++)
+            DocumentReference[] docRef1=new DocumentReference[Extras.page];
+            ApiFuture<DocumentSnapshot>[] future1=new ApiFuture[Extras.page];
+            DocumentSnapshot[] document1=new DocumentSnapshot[Extras.page];
+           for(i=(Extras.cur-1)*Extras.page;i<=Math.min(Extras.cur*Extras.page-1,co-1);i++)
            {
-                s[j]=new Label(Integer.toString(j+1));
+                s[j]=new Label(Integer.toString(i+1));
                 grid.add(s[j], 0, Extras.y+3+j);
                docRef1[j] = db.collection("messages").document(arr[co-i-1]);
                future1[j] = docRef1[j].get();

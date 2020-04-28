@@ -54,6 +54,7 @@ public class Home extends Application {
 
     @Override
     public void start(final Stage primaryStage) throws ScriptException, IOException {
+        Extras.cur=1;
 
         primaryStage.setTitle("Secure Message Transfer");
         final GridPane grid = new GridPane();

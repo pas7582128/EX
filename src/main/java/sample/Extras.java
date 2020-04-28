@@ -9,4 +9,5 @@ public class Extras
     public static int curm;
     public static String path="../key.json";
     public static String user_key;
+    public static int page=6;
 }
