@@ -198,7 +198,7 @@ public class Keys extends Application {
                 }
                 if(pw_dec.getText().trim().length()<8||pw_dec.getText().trim().length()>16) {
                     showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                            "Form Error!", "Decrypting passphrase must be between 8 and 16characters");
+                            "Form Error!", "Decrypting passphrase must be between 8 and 16 characters");
                     return;
                 }
                 Map<String, Object> docData = new HashMap();

@@ -77,7 +77,7 @@ public class SignUp extends Application {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.initOwner(owner);
-        alert.show();
+        alert.showAndWait();
     }
     @Override
     public void start(final Stage primaryStage) throws IOException {
@@ -236,8 +236,7 @@ public class SignUp extends Application {
                                 "Error!", "Email id not valid");
                         return;
                     }
-                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                            "Alert!", "OTP sent to your email id");
+
                     Map<String, Object> docData = new HashMap();
                     docData.put("name", nameField.getText().trim());
                     docData.put("email_id", userTextField.getText().trim());
@@ -254,6 +253,9 @@ public class SignUp extends Application {
                     } catch (ExecutionException executionException) {
                         executionException.printStackTrace();
                     }
+
+                    showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
+                            "Alert!", "OTP sent to your email id");
 
                     Map<String, Object> docData1 = new HashMap();
                     docData1.put("OTP", MD5.getMd5(id));

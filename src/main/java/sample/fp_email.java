@@ -168,7 +168,7 @@ public class fp_email extends Application {
                         else
                         {
                             DocumentReference docRef = db.collection("login_credentials").document(userTextField.getText().trim());
-                            ApiFuture<WriteResult>future2 = docRef.update("password", MD5.getMd5(pwBox.getText().trim()));
+                            ApiFuture<WriteResult>future2 = docRef.update("password", MD5.getMd5(pwBox1.getText().trim()));
                             showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
                                     "Alert!", "Password Changed Successfully");
                             try {
