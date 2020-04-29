@@ -122,8 +122,8 @@ public class KeyRing extends Application {
             {
                 users.add(arr[i]);
             }
-            Label[] s=new Label[10];
-            Label[] e=new Label[10];
+            Label[] s=new Label[Extras.page];
+            Label[] e=new Label[Extras.page];
             Button prev= new Button("Previous Page");
             Button next= new Button("Next Page");
             Label curp=new Label("Current Page - "+Extras.cur );
@@ -137,13 +137,13 @@ public class KeyRing extends Application {
             int i,j,k,co;
 
             co=arr.length;
-            int max=co/10;
-            if(co%10>0)
+            int max=co/Extras.page;
+            if(co%Extras.page>0)
             {
                 max++;
             }
             j=0;
-            for(i=(Extras.cur-1)*10;i<=Math.min(Extras.cur*10-1,co-1);i++)
+            for(i=(Extras.cur-1)*Extras.page;i<=Math.min(Extras.cur*Extras.page-1,co-1);i++)
             {
                 s[j]=new Label(Integer.toString(j+1));
                 grid.add(s[j], 0, Extras.y+3+j);

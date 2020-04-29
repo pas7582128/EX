@@ -118,6 +118,12 @@ public class Email_OTP extends Application {
         hbBtn.getChildren().add(btn);
         grid.add(hbBtn, 1, 5);
 
+        Button btn1 = new Button("Resend OTP");
+        HBox hbBtn1 = new HBox(10);
+        hbBtn1.setAlignment(Pos.BOTTOM_RIGHT);
+        hbBtn1.getChildren().add(btn1);
+        grid.add(hbBtn1, 1, 6);
+
         final Text actiontarget = new Text();
         grid.add(actiontarget, 1, 6);
         btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -164,6 +170,28 @@ public class Email_OTP extends Application {
                 }
 
 
+            }
+        });
+
+        btn1.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent e) {
+                Random random=new Random();
+                String id = String.format("%04d", random.nextInt(10000));
+                Map<String, Object> docData = new HashMap();
+                docData.put("OTP", MD5.getMd5(id));
+                ApiFuture<WriteResult> future1 = db.collection("verify_email").document(Extras.email).set(docData);
+
+                try {
+                    //System.out.println(userTextField.getText().toString());
+                    Send_OTP.sendPlainTextEmail("nsssvnit2020@gmail.com","Nss@svnit@2020",Extras.email,"Verify Email From Secure Message Transfer","Your OTP is "+id);
+                } catch (MessagingException messagingException) {
+                    messagingException.printStackTrace();
+                }
+                showAlert(Alert.AlertType.INFORMATION, grid.getScene().getWindow(),
+                        "Information", "OTP has been resent to your email id");
+                return;
             }
         });
 
