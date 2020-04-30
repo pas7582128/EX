@@ -283,12 +283,12 @@ public class Receiver extends Application {
                            if(document1[finalJ].get("algorithm").toString().equals("01")||document1[finalJ].get("algorithm").toString().equals("11"))
                            {
                                TextInputDialog td = new TextInputDialog("Enter Key");
-                               td.setHeaderText("Enter secret key");
+                               td.setHeaderText("Enter secret ");
                                PasswordField pwd = new PasswordField();
                                HBox content = new HBox();
                                content.setAlignment(Pos.CENTER_LEFT);
                                content.setSpacing(10);
-                               content.getChildren().addAll(new Label("Password"), pwd);
+                               content.getChildren().addAll(new Label("Secret"), pwd);
                                td.getDialogPane().setContent(content);
                                td.showAndWait();
 
@@ -341,7 +341,7 @@ public class Receiver extends Application {
                                            HBox content = new HBox();
                                            content.setAlignment(Pos.CENTER_LEFT);
                                            content.setSpacing(10);
-                                           content.getChildren().addAll(new Label("Password"), pwd);
+                                           content.getChildren().addAll(new Label("Passphrase"), pwd);
                                            td.getDialogPane().setContent(content);
                                            td.showAndWait();
 

@@ -385,13 +385,13 @@ public class Email extends Application {
                                 int i;
                                 for(i=0;i<arr.length;i++)
                                 {
-                                    TextInputDialog td = new TextInputDialog("Enter Key");
-                                    td.setHeaderText("Enter key for "+arr[i]);
+                                    TextInputDialog td = new TextInputDialog("Enter secret");
+                                    td.setHeaderText("Enter secret for "+arr[i]);
                                     PasswordField pwd = new PasswordField();
                                     HBox content = new HBox();
                                     content.setAlignment(Pos.CENTER_LEFT);
                                     content.setSpacing(10);
-                                    content.getChildren().addAll(new Label("Password"), pwd);
+                                    content.getChildren().addAll(new Label("Secret"), pwd);
                                     td.getDialogPane().setContent(content);
                                     Optional<String> result=td.showAndWait();
                                     if(!result.isPresent())
@@ -404,13 +404,13 @@ public class Email extends Application {
                                     if(pwd.getText().trim().length()==0)
                                     {
                                         showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                                "Error!", "Enter key");
+                                                "Error!", "Enter secret");
                                         i--;
                                     }
                                     else if(pwd.getText().trim().length()>16)
                                     {
                                         showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                                "Error!", "Key must be atmost 16 characters");
+                                                "Error!", "Secret must be atmost 16 characters");
                                         i--;
                                     }
                                     else
@@ -887,7 +887,7 @@ public class Email extends Application {
                             HBox content = new HBox();
                             content.setAlignment(Pos.CENTER_LEFT);
                             content.setSpacing(10);
-                            content.getChildren().addAll(new Label("Password"), pwd);
+                            content.getChildren().addAll(new Label("Passphrase"), pwd);
                             td.getDialogPane().setContent(content);
                             td.showAndWait();
 
@@ -959,13 +959,13 @@ public class Email extends Application {
                                             int i;
                                             for(i=0;i<arr.length;i++)
                                             {
-                                                td = new TextInputDialog("Enter Key");
-                                                td.setHeaderText("Enter key for "+arr[i]);
+                                                td = new TextInputDialog("Enter Secret");
+                                                td.setHeaderText("Enter secret for "+arr[i]);
                                                 pwd = new PasswordField();
                                                 content = new HBox();
                                                 content.setAlignment(Pos.CENTER_LEFT);
                                                 content.setSpacing(10);
-                                                content.getChildren().addAll(new Label("Password"), pwd);
+                                                content.getChildren().addAll(new Label("Secret"), pwd);
                                                 td.getDialogPane().setContent(content);
                                                 Optional<String> result=td.showAndWait();
                                                 if(!result.isPresent())
@@ -978,13 +978,13 @@ public class Email extends Application {
                                                 if(pwd.getText().trim().length()==0)
                                                 {
                                                     showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                                            "Error!", "Enter key");
+                                                            "Error!", "Enter secret");
                                                     i--;
                                                 }
                                                 else if(pwd.getText().trim().length()>16)
                                                 {
                                                     showAlert(Alert.AlertType.ERROR, grid.getScene().getWindow(),
-                                                            "Error!", "Key must be atmost 16 characters");
+                                                            "Error!", "Secret must be atmost 16 characters");
                                                     i--;
                                                 }
                                                 else
